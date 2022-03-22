@@ -128,7 +128,6 @@ void  TaskStart (void *pdata)
 
     pdata = pdata;                                         /* Prevent compiler warning                 */
 
-    TaskStartDispInit();                                   /* Setup the display                        */
 
     OS_ENTER_CRITICAL();                                   /* Install uC/OS-II's clock tick ISR        */
     PC_VectSet(0x08, OSTickISR);
@@ -137,13 +136,9 @@ void  TaskStart (void *pdata)
 
     OSStatInit();                                          /* Initialize uC/OS-II's statistics         */
 
-    AckMbox = OSMboxCreate((void *)0);                     /* Create 2 message mailboxes               */
-    TxMbox  = OSMboxCreate((void *)0);
-
     TaskStartCreateTasks();                                /* Create all other tasks                   */
 
     for (;;) {
-        TaskStartDisp();                                   /* Update the display                       */
 
         if (PC_GetKey(&key)) {                             /* See if key has been pressed              */
             if (key == 0x1B) {                             /* Yes, see if it's the ESCAPE key          */
@@ -155,7 +150,7 @@ void  TaskStart (void *pdata)
         OSTimeDly(OS_TICKS_PER_SEC);                       /* Wait one second                          */
     }
 }
-/*$PAGE*/
+
 /*
 *********************************************************************************************************
 *                                        INITIALIZE THE DISPLAY
@@ -282,206 +277,66 @@ static  void  TaskStartCreateTasks (void)
                    OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR,
                    2,
                    4);
-
-    OSTaskCreateExt(Task3,
-                   (void *)0,
-                   &Task3Stk[TASK_STK_SIZE - 1],
-                   TASK_3_PRIO,
-                   TASK_3_ID,
-                   &Task3Stk[0],
-                   TASK_STK_SIZE,
-                   (void *)0,
-                   OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR,
-                   2,
-                   4);
-
-    OSTaskCreateExt(Task4,
-                   (void *)0,
-                   &Task4Stk[TASK_STK_SIZE-1],
-                   TASK_4_PRIO,
-                   TASK_4_ID,
-                   &Task4Stk[0],
-                   TASK_STK_SIZE,
-                   (void *)0,
-                   OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR,
-                   2,
-                   4);
-
-    OSTaskCreateExt(Task5,
-                   (void *)0,
-                   &Task5Stk[TASK_STK_SIZE-1],
-                   TASK_5_PRIO,
-                   TASK_5_ID,
-                   &Task5Stk[0],
-                   TASK_STK_SIZE,
-                   (void *)0,
-                   OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR,
-                   2,
-                   4);
 }
-
-/*$PAGE*/
-/*
-*********************************************************************************************************
-*                                               TASK #1
-*
-* Description: This task executes every 100 mS and measures the time it task to perform stack checking
-*              for each of the 5 application tasks.  Also, this task displays the statistics related to
-*              each task's stack usage.
-*********************************************************************************************************
-*/
 
 void  Task1 (void *pdata)
 {
-    INT8U       err;
-    OS_STK_DATA data;                       /* Storage for task stack data                             */
-    INT16U      time;                       /* Execution time (in uS)                                  */
-    INT8U       i;
-    char        s[80];
-
-
+    INT32U start;
+    INT32U end;
+    INT32U toDelay;
+    start = OSTimeGet();
     pdata = pdata;
-    for (;;) {
-        for (i = 0; i < 7; i++) {
-            PC_ElapsedStart();
-            err  = OSTaskStkChk(TASK_START_PRIO + i, &data);
-            time = PC_ElapsedStop();
-            if (err == OS_NO_ERR) {
-                sprintf(s, "%4ld        %4ld        %4ld        %6d",
-                        data.OSFree + data.OSUsed,
-                        data.OSFree,
-                        data.OSUsed,
-                        time);
-                PC_DispStr(19, 12 + i, s, DISP_FGND_BLACK + DISP_BGND_LIGHT_GRAY);
-            }
+    while(1){
+        while(OSTCBCur->compTime > 0){
+            // do nothing
         }
-        OSTimeDlyHMSM(0, 0, 0, 100);                       /* Delay for 100 mS                         */
+        end = OSTimeGet();
+        toDelay = (OSTCBCur->period) - (end-start);
+        start = start + (OSTCBCur->period);
+        OS_ENTER_CRITICAL();
+            OSTCBCur->compTime = 1;
+        OS_EXIT_CRITICAL();
+        OSTimeDly(toDelay);
     }
 }
-/*$PAGE*/
-/*
-*********************************************************************************************************
-*                                               TASK #2
-*
-* Description: This task displays a clockwise rotating wheel on the screen.
-*********************************************************************************************************
-*/
 
-void  Task2 (void *data)
+void  Task2 (void *pdata)
 {
-    data = data;
-    for (;;) {
-        PC_DispChar(70, 15, '|',  DISP_FGND_YELLOW + DISP_BGND_BLUE);
-        OSTimeDly(10);
-        PC_DispChar(70, 15, '/',  DISP_FGND_YELLOW + DISP_BGND_BLUE);
-        OSTimeDly(10);
-        PC_DispChar(70, 15, '-',  DISP_FGND_YELLOW + DISP_BGND_BLUE);
-        OSTimeDly(10);
-        PC_DispChar(70, 15, '\\', DISP_FGND_YELLOW + DISP_BGND_BLUE);
-        OSTimeDly(10);
-    }
-}
-/*$PAGE*/
-/*
-*********************************************************************************************************
-*                                               TASK #3
-*
-* Description: This task displays a counter-clockwise rotating wheel on the screen.
-*
-* Note(s)    : I allocated 500 bytes of storage on the stack to artificially 'eat' up stack space.
-*********************************************************************************************************
-*/
-
-void  Task3 (void *data)
-{
-    char    dummy[500];
-    INT16U  i;
-
-
-    data = data;
-    for (i = 0; i < 499; i++) {        /* Use up the stack with 'junk'                                 */
-        dummy[i] = '?';
-    }
-    for (;;) {
-        PC_DispChar(70, 16, '|',  DISP_FGND_YELLOW + DISP_BGND_BLUE);
-        OSTimeDly(20);
-        PC_DispChar(70, 16, '\\', DISP_FGND_YELLOW + DISP_BGND_BLUE);
-        OSTimeDly(20);
-        PC_DispChar(70, 16, '-',  DISP_FGND_YELLOW + DISP_BGND_BLUE);
-        OSTimeDly(20);
-        PC_DispChar(70, 16, '/',  DISP_FGND_YELLOW + DISP_BGND_BLUE);
-        OSTimeDly(20);
-    }
-}
-/*$PAGE*/
-/*
-*********************************************************************************************************
-*                                               TASK #4
-*
-* Description: This task sends a message to Task #5.  The message consist of a character that needs to
-*              be displayed by Task #5.  This task then waits for an acknowledgement from Task #5
-*              indicating that the message has been displayed.
-*********************************************************************************************************
-*/
-
-void  Task4 (void *data)
-{
-    char   txmsg;
-    INT8U  err;
-
-
-    data  = data;
-    txmsg = 'A';
-    for (;;) {
-        OSMboxPost(TxMbox, (void *)&txmsg);      /* Send message to Task #5                            */
-        OSMboxPend(AckMbox, 0, &err);            /* Wait for acknowledgement from Task #5              */
-        txmsg++;                                 /* Next message to send                               */
-        if (txmsg == 'Z') {
-            txmsg = 'A';                         /* Start new series of messages                       */
+    INT32U start;
+    INT32U end;
+    INT32U toDelay;
+    start = OSTimeGet();
+    pdata = pdata;
+    while(1){
+        while(OSTCBCur->compTime > 0){
+            // do nothing
         }
+        end = OSTimeGet();
+        toDelay = (OSTCBCur->period) - (end-start);
+        start = start + (OSTCBCur->period);
+        OS_ENTER_CRITICAL();
+            OSTCBCur->compTime = 2;
+        OS_EXIT_CRITICAL();
+        OSTimeDly(toDelay);
     }
 }
-/*$PAGE*/
-/*
-*********************************************************************************************************
-*                                               TASK #5
-*
-* Description: This task displays messages sent by Task #4.  When the message is displayed, Task #5
-*              acknowledges Task #4.
-*********************************************************************************************************
-*/
-
-void  Task5 (void *data)
-{
-    char  *rxmsg;
-    INT8U  err;
-
-
-    data = data;
-    for (;;) {
-        rxmsg = (char *)OSMboxPend(TxMbox, 0, &err);                  /* Wait for message from Task #4 */
-        PC_DispChar(70, 18, *rxmsg, DISP_FGND_YELLOW + DISP_BGND_BLUE);
-        OSTimeDlyHMSM(0, 0, 1, 0);                                    /* Wait 1 second                 */
-        OSMboxPost(AckMbox, (void *)1);                               /* Acknowledge reception of msg  */
-    }
-}
-/*$PAGE*/
-/*
-*********************************************************************************************************
-*                                               CLOCK TASK
-*********************************************************************************************************
-*/
 
 void  TaskClk (void *data)
 {
-    char s[40];
-
-
+   lab1_time_tick = 0;
+    memset(lab1_output, 0, sizeof(lab1_output));
     data = data;
+
     for (;;) {
-        PC_GetDateTime(s);
-        PC_DispStr(60, 23, s, DISP_FGND_YELLOW + DISP_BGND_BLUE);
-        OSTimeDly(OS_TICKS_PER_SEC);
+        if(lab1_output[0] != '\0'){
+            //PC_DispStr(0, lab1_time_tick, lab1_output, DISP_FGND_WHITE);
+            OS_ENTER_CRITICAL();
+                memset(lab1_output, 0, sizeof(lab1_output));
+            OS_EXIT_CRITICAL();
+        }
+        lab1_time_tick++;
+        
+        OSTimeDly(1);
     }
 }
 

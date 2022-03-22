@@ -418,6 +418,9 @@ typedef struct os_tcb {
 *                                            GLOBAL VARIABLES
 *********************************************************************************************************
 */
+// Lab1 global variables
+OS_EXT INT32U lab1_time_tick;
+OS_EXT char lab1_output[4096];
 
 OS_EXT  INT32U            OSCtxSwCtr;               /* Counter of number of context switches           */
 
