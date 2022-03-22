@@ -36,6 +36,13 @@
 #define          TASK_4_PRIO        15
 #define          TASK_5_PRIO        16
 
+#define          TASK_1_C           1
+#define          TASK_1_P           3
+
+#define          TASK_2_C           3
+#define          TASK_2_P           6
+
+
 /*
 *********************************************************************************************************
 *                                              VARIABLES
@@ -69,6 +76,7 @@ static  void  TaskStartDisp(void);
         void  Task3(void *data);
         void  Task4(void *data);
         void  Task5(void *data);
+        void print_buffer();
 
 /*$PAGE*/
 /*
@@ -135,6 +143,9 @@ void  TaskStart (void *pdata)
     OS_EXIT_CRITICAL();
 
     OSStatInit();                                          /* Initialize uC/OS-II's statistics         */
+
+    memset(lab1_output, 0, sizeof(lab1_output));           /* lab1                                     */
+    lab1_print_cnt = 0;                                    /* lab1                                     */
 
     TaskStartCreateTasks();                                /* Create all other tasks                   */
 
@@ -242,18 +253,6 @@ static  void  TaskStartDisp (void)
 
 static  void  TaskStartCreateTasks (void)
 {
-    OSTaskCreateExt(TaskClk,
-                   (void *)0,
-                   &TaskClkStk[TASK_STK_SIZE - 1],
-                   TASK_CLK_PRIO,
-                   TASK_CLK_ID,
-                   &TaskClkStk[0],
-                   TASK_STK_SIZE,
-                   (void *)0,
-                   OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR,
-                   0,
-                   0);
-
     OSTaskCreateExt(Task1,
                    (void *)0,
                    &Task1Stk[TASK_STK_SIZE - 1],
@@ -263,8 +262,8 @@ static  void  TaskStartCreateTasks (void)
                    TASK_STK_SIZE,
                    (void *)0,
                    OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR,
-                   1,
-                   2);
+                   TASK_1_C,
+                   TASK_1_P);
 
     OSTaskCreateExt(Task2,
                    (void *)0,
@@ -275,8 +274,8 @@ static  void  TaskStartCreateTasks (void)
                    TASK_STK_SIZE,
                    (void *)0,
                    OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR,
-                   2,
-                   4);
+                   TASK_2_C,
+                   TASK_2_P);
 }
 
 void  Task1 (void *pdata)
@@ -290,6 +289,7 @@ void  Task1 (void *pdata)
         while(OSTCBCur->compTime > 0){
             // do nothing
         }
+        print_buffer();
         end = OSTimeGet();
         toDelay = (OSTCBCur->period) - (end-start);
         start = start + (OSTCBCur->period);
@@ -311,6 +311,7 @@ void  Task2 (void *pdata)
         while(OSTCBCur->compTime > 0){
             // do nothing
         }
+        print_buffer();
         end = OSTimeGet();
         toDelay = (OSTCBCur->period) - (end-start);
         start = start + (OSTCBCur->period);
@@ -321,24 +322,33 @@ void  Task2 (void *pdata)
     }
 }
 
-void  TaskClk (void *data)
+void  print_buffer ()
 {
-    lab1_time_tick = 0;
-    memset(lab1_output, 0, sizeof(lab1_output));
-    data = data;
-
-    for (;;) {
-        if(lab1_output[0] != '\0'){
-            PC_DispStr(0, lab1_time_tick, lab1_output, DISP_FGND_WHITE);
-            OS_ENTER_CRITICAL();
-                memset(lab1_output, 0, sizeof(lab1_output));
-            OS_EXIT_CRITICAL();
-        }
+    if(lab1_output[0] != '\0'){
         OS_ENTER_CRITICAL();
-            lab1_time_tick++;
+            PC_DispStr(0, ++lab1_print_cnt, lab1_output, DISP_FGND_WHITE);
+            memset(lab1_output, 0, sizeof(lab1_output));
         OS_EXIT_CRITICAL();
-        
-        OSTimeDly(1);
     }
 }
+// void  TaskClk (void *data)
+// {
+//     lab1_time_tick = 0;
+//     memset(lab1_output, 0, sizeof(lab1_output));
+//     data = data;
+
+//     for (;;) {
+//         if(lab1_output[0] != '\0'){
+//             PC_DispStr(0, lab1_time_tick, lab1_output, DISP_FGND_WHITE);
+//             OS_ENTER_CRITICAL();
+//                 memset(lab1_output, 0, sizeof(lab1_output));
+//             OS_EXIT_CRITICAL();
+//         }
+//         OS_ENTER_CRITICAL();
+//             lab1_time_tick++;
+//         OS_EXIT_CRITICAL();
+        
+//         OSTimeDly(1);
+//     }
+// }
 

@@ -185,7 +185,7 @@ void  OSIntExit (void)
             OSIntExitY    = OSUnMapTbl[OSRdyGrp];          /* ... and not locked.                      */
             OSPrioHighRdy = (INT8U)((OSIntExitY << 3) + OSUnMapTbl[OSRdyTbl[OSIntExitY]]);
             if (OSPrioHighRdy != OSPrioCur) {              /* No Ctx Sw if current task is highest rdy */
-                sprintf(lab1_output,"%d preempt  %d  %d\n", lab1_time_tick,OSPrioCur, OSPrioHighRdy);
+                sprintf(lab1_output,"%d preempt  %d  %d\n", (INT16U)OSTime,OSPrioCur, OSPrioHighRdy);
                 OSTCBHighRdy  = OSTCBPrioTbl[OSPrioHighRdy];
                 OSCtxSwCtr++;                              /* Keep track of the number of ctx switches */
                 OSIntCtxSw();                              /* Perform interrupt level ctx switch       */
@@ -889,7 +889,7 @@ void  OS_Sched (void)
         y             = OSUnMapTbl[OSRdyGrp];          /* Get pointer to HPT ready to run              */
         OSPrioHighRdy = (INT8U)((y << 3) + OSUnMapTbl[OSRdyTbl[y]]);
         if (OSPrioHighRdy != OSPrioCur) {              /* No Ctx Sw if current task is highest rdy     */
-            sprintf(lab1_output,"%d complete %d  %d\n", lab1_time_tick,OSPrioCur, OSPrioHighRdy);
+            sprintf(lab1_output,"%d complete %d  %d\n", (INT16U)OSTime,OSPrioCur, OSPrioHighRdy);
             OSTCBHighRdy = OSTCBPrioTbl[OSPrioHighRdy];
             OSCtxSwCtr++;                              /* Increment context switch counter             */
             OS_TASK_SW();                              /* Perform a context switch                     */
