@@ -175,7 +175,7 @@ INT8U  OSTaskCreate (void (*task)(void *pd), void *pdata, OS_STK *ptos, INT8U pr
                                              /* ... the same thing until task is created.              */
         OS_EXIT_CRITICAL();
         psp = (OS_STK *)OSTaskStkInit(task, pdata, ptos, 0);    /* Initialize the task's stack         */
-        err = OS_TCBInit(prio, psp, (OS_STK *)0, 0, 0, (void *)0, 0);
+        err = OS_TCBInit(prio, psp, (OS_STK *)0, 0, 0, (void *)0, 0, 0, 0);
         if (err == OS_NO_ERR) {
             OS_ENTER_CRITICAL();
             OSTaskCtr++;                                        /* Increment the #tasks counter        */
@@ -268,7 +268,9 @@ INT8U  OSTaskCreateExt (void   (*task)(void *pd),
                         OS_STK  *pbos,
                         INT32U   stk_size,
                         void    *pext,
-                        INT16U   opt)
+                        INT16U   opt,
+                        INT32U c,
+                        INT32U p)
 {
 #if OS_CRITICAL_METHOD == 3                  /* Allocate storage for CPU status register               */
     OS_CPU_SR  cpu_sr;
@@ -298,7 +300,7 @@ INT8U  OSTaskCreateExt (void   (*task)(void *pd),
         }
 
         psp = (OS_STK *)OSTaskStkInit(task, pdata, ptos, opt); /* Initialize the task's stack          */
-        err = OS_TCBInit(prio, psp, pbos, id, stk_size, pext, opt);
+        err = OS_TCBInit(prio, psp, pbos, id, stk_size, pext, opt, c, p);
         if (err == OS_NO_ERR) {
             OS_ENTER_CRITICAL();
             OSTaskCtr++;                                       /* Increment the #tasks counter         */

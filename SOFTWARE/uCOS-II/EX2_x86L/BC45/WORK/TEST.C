@@ -105,7 +105,9 @@ void main (void)
                    pbos,
                    size,
                    (void *)0,
-                   OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR);
+                   OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR,
+                   2,
+                   4);
 
     OSStart();                                             /* Start multitasking                       */
 }
@@ -253,7 +255,9 @@ static  void  TaskStartCreateTasks (void)
                    &TaskClkStk[0],
                    TASK_STK_SIZE,
                    (void *)0,
-                   OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR);
+                   OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR,
+                   0,
+                   0);
 
     OSTaskCreateExt(Task1,
                    (void *)0,
@@ -263,7 +267,9 @@ static  void  TaskStartCreateTasks (void)
                    &Task1Stk[0],
                    TASK_STK_SIZE,
                    (void *)0,
-                   OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR);
+                   OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR,
+                   1,
+                   2);
 
     OSTaskCreateExt(Task2,
                    (void *)0,
@@ -273,7 +279,9 @@ static  void  TaskStartCreateTasks (void)
                    &Task2Stk[0],
                    TASK_STK_SIZE,
                    (void *)0,
-                   OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR);
+                   OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR,
+                   2,
+                   4);
 
     OSTaskCreateExt(Task3,
                    (void *)0,
@@ -283,7 +291,9 @@ static  void  TaskStartCreateTasks (void)
                    &Task3Stk[0],
                    TASK_STK_SIZE,
                    (void *)0,
-                   OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR);
+                   OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR,
+                   2,
+                   4);
 
     OSTaskCreateExt(Task4,
                    (void *)0,
@@ -293,7 +303,9 @@ static  void  TaskStartCreateTasks (void)
                    &Task4Stk[0],
                    TASK_STK_SIZE,
                    (void *)0,
-                   OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR);
+                   OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR,
+                   2,
+                   4);
 
     OSTaskCreateExt(Task5,
                    (void *)0,
@@ -303,7 +315,9 @@ static  void  TaskStartCreateTasks (void)
                    &Task5Stk[0],
                    TASK_STK_SIZE,
                    (void *)0,
-                   OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR);
+                   OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR,
+                   2,
+                   4);
 }
 
 /*$PAGE*/

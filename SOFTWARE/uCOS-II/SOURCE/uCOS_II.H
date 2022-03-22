@@ -688,7 +688,10 @@ INT8U         OSTaskCreateExt(void  (*task)(void *pd),
                               OS_STK *pbos,
                               INT32U  stk_size,
                               void   *pext,
-                              INT16U  opt);
+                              INT16U  opt,
+                              INT32U c,
+                              INT32U p
+                              );
 #endif
 
 #if OS_TASK_DEL_EN > 0
@@ -795,7 +798,7 @@ void          OS_TaskIdle(void *data);
 void          OS_TaskStat(void *data);
 #endif
 
-INT8U         OS_TCBInit(INT8U prio, OS_STK *ptos, OS_STK *pbos, INT16U id, INT32U stk_size, void *pext, INT16U opt);
+INT8U         OS_TCBInit(INT8U prio, OS_STK *ptos, OS_STK *pbos, INT16U id, INT32U stk_size, void *pext, INT16U opt, INT32U c, INT32U p);
 
 /*$PAGE*/
 /*
