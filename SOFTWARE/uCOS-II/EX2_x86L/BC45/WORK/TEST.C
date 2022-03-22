@@ -323,18 +323,20 @@ void  Task2 (void *pdata)
 
 void  TaskClk (void *data)
 {
-   lab1_time_tick = 0;
+    lab1_time_tick = 0;
     memset(lab1_output, 0, sizeof(lab1_output));
     data = data;
 
     for (;;) {
         if(lab1_output[0] != '\0'){
-            //PC_DispStr(0, lab1_time_tick, lab1_output, DISP_FGND_WHITE);
+            PC_DispStr(0, lab1_time_tick, lab1_output, DISP_FGND_WHITE);
             OS_ENTER_CRITICAL();
                 memset(lab1_output, 0, sizeof(lab1_output));
             OS_EXIT_CRITICAL();
         }
-        lab1_time_tick++;
+        OS_ENTER_CRITICAL();
+            lab1_time_tick++;
+        OS_EXIT_CRITICAL();
         
         OSTimeDly(1);
     }
