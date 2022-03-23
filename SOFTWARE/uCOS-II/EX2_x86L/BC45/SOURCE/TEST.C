@@ -21,26 +21,31 @@
 #define          TASK_STK_SIZE     512                /* Size of each task's stacks (# of WORDs)       */
 
 #define          TASK_START_ID       0                /* Application tasks IDs                         */
-#define          TASK_CLK_ID         1
-#define          TASK_1_ID           2
-#define          TASK_2_ID           3
-#define          TASK_3_ID           4
-#define          TASK_4_ID           5
-#define          TASK_5_ID           6
+#define          TASK_1_ID           1
+#define          TASK_2_ID           2
+#define          TASK_3_ID           3
 
-#define          TASK_START_PRIO    10                /* Application tasks priorities                  */
-#define          TASK_CLK_PRIO      11
-#define          TASK_1_PRIO        12
-#define          TASK_2_PRIO        13
-#define          TASK_3_PRIO        14
-#define          TASK_4_PRIO        15
-#define          TASK_5_PRIO        16
+#define          TASK_START_PRIO    0                /* Application tasks priorities                  */
+// #define          TASK_CLK_PRIO      11
+// #define          TASK_1_PRIO        12
+// #define          TASK_2_PRIO        13
+// #define          TASK_3_PRIO        14
+// #define          TASK_4_PRIO        15
+// #define          TASK_5_PRIO        16
 
-#define          TASK_1_C           1
-#define          TASK_1_P           3
+// #define          TASK_1_C           1
+// #define          TASK_1_P           3
 
-#define          TASK_2_C           3
-#define          TASK_2_P           6
+// #define          TASK_2_C           3
+// #define          TASK_2_P           6
+
+// #define          TASK_3_C           3
+// #define          TASK_3_P           6
+
+#define          TASK_NUM            3
+
+
+
 
 
 /*
@@ -54,11 +59,8 @@ OS_STK        TaskClkStk[TASK_STK_SIZE];              /* Clock      task stack  
 OS_STK        Task1Stk[TASK_STK_SIZE];                /* Task #1    task stack                         */
 OS_STK        Task2Stk[TASK_STK_SIZE];                /* Task #2    task stack                         */
 OS_STK        Task3Stk[TASK_STK_SIZE];                /* Task #3    task stack                         */
-OS_STK        Task4Stk[TASK_STK_SIZE];                /* Task #4    task stack                         */
-OS_STK        Task5Stk[TASK_STK_SIZE];                /* Task #5    task stack                         */
-
-OS_EVENT     *AckMbox;                                /* Message mailboxes for Tasks #4 and #5         */
-OS_EVENT     *TxMbox;
+INT8U         TASK_INFO[TASK_NUM][2] = {{1,4},{1,4},{1,4}};
+INT8U         TASK_PRIO[TASK_NUM] = {1, 2, 3};
 
 /*
 *********************************************************************************************************
@@ -68,17 +70,14 @@ OS_EVENT     *TxMbox;
 
         void  TaskStart(void *data);                  /* Function prototypes of tasks                  */
 static  void  TaskStartCreateTasks(void);
-static  void  TaskStartDispInit(void);
-static  void  TaskStartDisp(void);
-        void  TaskClk(void *data);
         void  Task1(void *data);
         void  Task2(void *data);
         void  Task3(void *data);
-        void  Task4(void *data);
-        void  Task5(void *data);
-        void print_buffer();
+        void  print_buffer();
+        void  RM_sort();
 
-/*$PAGE*/
+
+
 /*
 *********************************************************************************************************
 *                                                  MAIN
@@ -119,12 +118,17 @@ void main (void)
 
     OSStart();                                             /* Start multitasking                       */
 }
-/*$PAGE*/
-/*
-*********************************************************************************************************
-*                                               STARTUP TASK
-*********************************************************************************************************
-*/
+
+void print_buffer()
+{
+    if(lab1_output[0] != '\0'){
+        OS_ENTER_CRITICAL();
+            //PC_DispStr(0, (++lab1_print_cnt)%30, lab1_output, DISP_FGND_WHITE); // for PC
+            printf("%s",lab1_output);
+            memset(lab1_output, 0, sizeof(lab1_output));
+        OS_EXIT_CRITICAL();
+    }
+}
 
 void  TaskStart (void *pdata)
 {
@@ -148,6 +152,7 @@ void  TaskStart (void *pdata)
     lab1_print_cnt = 0;                                    /* lab1                                     */
 
     TaskStartCreateTasks();                                /* Create all other tasks                   */
+    OSTimeSet(0);
 
     for (;;) {
 
@@ -162,120 +167,43 @@ void  TaskStart (void *pdata)
     }
 }
 
-/*
-*********************************************************************************************************
-*                                        INITIALIZE THE DISPLAY
-*********************************************************************************************************
-*/
-
-static  void  TaskStartDispInit (void)
-{
-/*                                1111111111222222222233333333334444444444555555555566666666667777777777 */
-/*                      01234567890123456789012345678901234567890123456789012345678901234567890123456789 */
-    PC_DispStr( 0,  0, "                         uC/OS-II, The Real-Time Kernel                         ", DISP_FGND_WHITE + DISP_BGND_RED + DISP_BLINK);
-    PC_DispStr( 0,  1, "                                Jean J. Labrosse                                ", DISP_FGND_BLACK + DISP_BGND_LIGHT_GRAY);
-    PC_DispStr( 0,  2, "                                                                                ", DISP_FGND_BLACK + DISP_BGND_LIGHT_GRAY);
-    PC_DispStr( 0,  3, "                                    EXAMPLE #2                                  ", DISP_FGND_BLACK + DISP_BGND_LIGHT_GRAY);
-    PC_DispStr( 0,  4, "                                                                                ", DISP_FGND_BLACK + DISP_BGND_LIGHT_GRAY);
-    PC_DispStr( 0,  5, "                                                                                ", DISP_FGND_BLACK + DISP_BGND_LIGHT_GRAY);
-    PC_DispStr( 0,  6, "                                                                                ", DISP_FGND_BLACK + DISP_BGND_LIGHT_GRAY);
-    PC_DispStr( 0,  7, "                                                                                ", DISP_FGND_BLACK + DISP_BGND_LIGHT_GRAY);
-    PC_DispStr( 0,  8, "                                                                                ", DISP_FGND_BLACK + DISP_BGND_LIGHT_GRAY);
-    PC_DispStr( 0,  9, "Task           Total Stack  Free Stack  Used Stack  ExecTime (uS)               ", DISP_FGND_BLACK + DISP_BGND_LIGHT_GRAY);
-    PC_DispStr( 0, 10, "-------------  -----------  ----------  ----------  -------------               ", DISP_FGND_BLACK + DISP_BGND_LIGHT_GRAY);
-    PC_DispStr( 0, 11, "                                                                                ", DISP_FGND_BLACK + DISP_BGND_LIGHT_GRAY);
-    PC_DispStr( 0, 12, "TaskStart():                                                                    ", DISP_FGND_BLACK + DISP_BGND_LIGHT_GRAY);
-    PC_DispStr( 0, 13, "TaskClk()  :                                                                    ", DISP_FGND_BLACK + DISP_BGND_LIGHT_GRAY);
-    PC_DispStr( 0, 14, "Task1()    :                                                                    ", DISP_FGND_BLACK + DISP_BGND_LIGHT_GRAY);
-    PC_DispStr( 0, 15, "Task2()    :                                                                    ", DISP_FGND_BLACK + DISP_BGND_LIGHT_GRAY);
-    PC_DispStr( 0, 16, "Task3()    :                                                                    ", DISP_FGND_BLACK + DISP_BGND_LIGHT_GRAY);
-    PC_DispStr( 0, 17, "Task4()    :                                                                    ", DISP_FGND_BLACK + DISP_BGND_LIGHT_GRAY);
-    PC_DispStr( 0, 18, "Task5()    :                                                                    ", DISP_FGND_BLACK + DISP_BGND_LIGHT_GRAY);
-    PC_DispStr( 0, 19, "                                                                                ", DISP_FGND_BLACK + DISP_BGND_LIGHT_GRAY);
-    PC_DispStr( 0, 20, "                                                                                ", DISP_FGND_BLACK + DISP_BGND_LIGHT_GRAY);
-    PC_DispStr( 0, 21, "                                                                                ", DISP_FGND_BLACK + DISP_BGND_LIGHT_GRAY);
-    PC_DispStr( 0, 22, "#Tasks          :        CPU Usage:     %                                       ", DISP_FGND_BLACK + DISP_BGND_LIGHT_GRAY);
-    PC_DispStr( 0, 23, "#Task switch/sec:                                                               ", DISP_FGND_BLACK + DISP_BGND_LIGHT_GRAY);
-    PC_DispStr( 0, 24, "                            <-PRESS 'ESC' TO QUIT->                             ", DISP_FGND_BLACK + DISP_BGND_LIGHT_GRAY + DISP_BLINK);
-/*                                1111111111222222222233333333334444444444555555555566666666667777777777 */
-/*                      01234567890123456789012345678901234567890123456789012345678901234567890123456789 */
-}
-
-/*$PAGE*/
-/*
-*********************************************************************************************************
-*                                           UPDATE THE DISPLAY
-*********************************************************************************************************
-*/
-
-static  void  TaskStartDisp (void)
-{
-    char   s[80];
-
-
-    sprintf(s, "%5d", OSTaskCtr);                                  /* Display #tasks running               */
-    PC_DispStr(18, 22, s, DISP_FGND_YELLOW + DISP_BGND_BLUE);
-
-    sprintf(s, "%3d", OSCPUUsage);                                 /* Display CPU usage in %               */
-    PC_DispStr(36, 22, s, DISP_FGND_YELLOW + DISP_BGND_BLUE);
-
-    sprintf(s, "%5d", OSCtxSwCtr);                                 /* Display #context switches per second */
-    PC_DispStr(18, 23, s, DISP_FGND_YELLOW + DISP_BGND_BLUE);
-
-    sprintf(s, "V%4.2f", (float)OSVersion() * 0.01);               /* Display uC/OS-II's version number    */
-    PC_DispStr(75, 24, s, DISP_FGND_YELLOW + DISP_BGND_BLUE);
-
-    switch (_8087) {                                               /* Display whether FPU present          */
-        case 0:
-             PC_DispStr(71, 22, " NO  FPU ", DISP_FGND_YELLOW + DISP_BGND_BLUE);
-             break;
-
-        case 1:
-             PC_DispStr(71, 22, " 8087 FPU", DISP_FGND_YELLOW + DISP_BGND_BLUE);
-             break;
-
-        case 2:
-             PC_DispStr(71, 22, "80287 FPU", DISP_FGND_YELLOW + DISP_BGND_BLUE);
-             break;
-
-        case 3:
-             PC_DispStr(71, 22, "80387 FPU", DISP_FGND_YELLOW + DISP_BGND_BLUE);
-             break;
-    }
-}
-
-/*$PAGE*/
-/*
-*********************************************************************************************************
-*                                             CREATE TASKS
-*********************************************************************************************************
-*/
-
 static  void  TaskStartCreateTasks (void)
 {
     OSTaskCreateExt(Task1,
                    (void *)0,
                    &Task1Stk[TASK_STK_SIZE - 1],
-                   TASK_1_PRIO,
+                   TASK_PRIO[0],
                    TASK_1_ID,
                    &Task1Stk[0],
                    TASK_STK_SIZE,
                    (void *)0,
                    OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR,
-                   TASK_1_C,
-                   TASK_1_P);
+                   TASK_INFO[0][0],
+                   TASK_INFO[0][1]);
 
     OSTaskCreateExt(Task2,
                    (void *)0,
                    &Task2Stk[TASK_STK_SIZE - 1],
-                   TASK_2_PRIO,
+                   TASK_PRIO[1],
                    TASK_2_ID,
                    &Task2Stk[0],
                    TASK_STK_SIZE,
                    (void *)0,
                    OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR,
-                   TASK_2_C,
-                   TASK_2_P);
+                   TASK_INFO[1][0],
+                   TASK_INFO[1][1]);
+
+    OSTaskCreateExt(Task3,
+                   (void *)0,
+                   &Task3Stk[TASK_STK_SIZE - 1],
+                   TASK_PRIO[2],
+                   TASK_3_ID,
+                   &Task3Stk[0],
+                   TASK_STK_SIZE,
+                   (void *)0,
+                   OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR,
+                   TASK_INFO[2][0],
+                   TASK_INFO[2][1]);
 }
 
 void  Task1 (void *pdata)
@@ -294,7 +222,7 @@ void  Task1 (void *pdata)
         toDelay = (OSTCBCur->period) - (end-start);
         start = start + (OSTCBCur->period);
         OS_ENTER_CRITICAL();
-            OSTCBCur->compTime = 1;
+            OSTCBCur->compTime = TASK_INFO[0][0];
         OS_EXIT_CRITICAL();
         OSTimeDly(toDelay);
     }
@@ -316,39 +244,51 @@ void  Task2 (void *pdata)
         toDelay = (OSTCBCur->period) - (end-start);
         start = start + (OSTCBCur->period);
         OS_ENTER_CRITICAL();
-            OSTCBCur->compTime = 2;
+            OSTCBCur->compTime = TASK_INFO[1][0];
+        OS_EXIT_CRITICAL();
+        OSTimeDly(toDelay);
+    }
+}
+void  Task3 (void *pdata)
+{
+    INT32U start;
+    INT32U end;
+    INT32U toDelay;
+    start = OSTimeGet();
+    pdata = pdata;
+    while(1){
+        while(OSTCBCur->compTime > 0){
+            // do nothing
+        }
+        print_buffer();
+        end = OSTimeGet();
+        toDelay = (OSTCBCur->period) - (end-start);
+        start = start + (OSTCBCur->period);
+        OS_ENTER_CRITICAL();
+            OSTCBCur->compTime = TASK_INFO[2][0];
         OS_EXIT_CRITICAL();
         OSTimeDly(toDelay);
     }
 }
 
-void  print_buffer ()
-{
-    if(lab1_output[0] != '\0'){
-        OS_ENTER_CRITICAL();
-            PC_DispStr(0, ++lab1_print_cnt, lab1_output, DISP_FGND_WHITE); // for PC
-            memset(lab1_output, 0, sizeof(lab1_output));
-        OS_EXIT_CRITICAL();
-    }
-}
-// void  TaskClk (void *data)
-// {
-//     lab1_time_tick = 0;
-//     memset(lab1_output, 0, sizeof(lab1_output));
-//     data = data;
+void RM_sort(){
+    // DO NOTHING
 
-//     for (;;) {
-//         if(lab1_output[0] != '\0'){
-//             PC_DispStr(0, lab1_time_tick, lab1_output, DISP_FGND_WHITE);
-//             OS_ENTER_CRITICAL();
-//                 memset(lab1_output, 0, sizeof(lab1_output));
-//             OS_EXIT_CRITICAL();
-//         }
-//         OS_ENTER_CRITICAL();
-//             lab1_time_tick++;
-//         OS_EXIT_CRITICAL();
-        
-//         OSTimeDly(1);
-//     }
-// }
+    // if(TASK_NUM == 2){
+    //     if(TASK_info[0][0]/TASK_info[0][1] < TASK_info[1][0]/TASK_info[1][1]){
+    //         TASK_prio = {2,1};
+    //     }
+    //     else{
+    //         TASK_prio = {1,2};
+    //     }
+    // }
+    // else if(TASK_NUM == 3){
+    //     if(TASK_info[0][0]/TASK_info[0][1] >= TASK_info[1][0]/TASK_info[1][1]){
+    //         if(TASK_info[1][0]/TASK_info[1][1] >= TASK_info[2][0]/TASK_info[2][1]){
+    //             TASK_prio = {1,2,3};
+    //         }
+    //         el
+    //     }
+    // }
+}
 
