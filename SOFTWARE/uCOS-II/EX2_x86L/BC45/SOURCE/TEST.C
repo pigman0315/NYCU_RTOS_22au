@@ -153,18 +153,19 @@ void  TaskStart (void *pdata)
 
     TaskStartCreateTasks();                                /* Create all other tasks                   */
     OSTimeSet(0);
+    OSTaskDel(TASK_START_PRIO);
 
-    for (;;) {
+    // for (;;) {
 
-        if (PC_GetKey(&key)) {                             /* See if key has been pressed              */
-            if (key == 0x1B) {                             /* Yes, see if it's the ESCAPE key          */
-                PC_DOSReturn();                            /* Yes, return to DOS                       */
-            }
-        }
+    //     if (PC_GetKey(&key)) {                             /* See if key has been pressed              */
+    //         if (key == 0x1B) {                             /* Yes, see if it's the ESCAPE key          */
+    //             PC_DOSReturn();                            /* Yes, return to DOS                       */
+    //         }
+    //     }
 
-        OSCtxSwCtr = 0;                                    /* Clear context switch counter             */
-        OSTimeDly(OS_TICKS_PER_SEC);                       /* Wait one second                          */
-    }
+    //     OSCtxSwCtr = 0;                                    /* Clear context switch counter             */
+    //     OSTimeDly(OS_TICKS_PER_SEC);                       /* Wait one second                          */
+    // }
 }
 
 static  void  TaskStartCreateTasks (void)
@@ -211,11 +212,17 @@ void  Task1 (void *pdata)
     INT32U start;
     INT32U end;
     INT32U toDelay;
+    INT16S  key;
     start = OSTimeGet();
     pdata = pdata;
+    
     while(1){
         while(OSTCBCur->compTime > 0){
-            // do nothing
+                if (PC_GetKey(&key)) {                             /* See if key has been pressed              */
+                    if (key == 0x1B) {                             /* Yes, see if it's the ESCAPE key          */
+                        PC_DOSReturn();                            /* Yes, return to DOS                       */
+                    }
+                }
         }
         print_buffer();
         end = OSTimeGet();
@@ -233,11 +240,16 @@ void  Task2 (void *pdata)
     INT32U start;
     INT32U end;
     INT32U toDelay;
+    INT16S  key;
     start = OSTimeGet();
     pdata = pdata;
     while(1){
         while(OSTCBCur->compTime > 0){
-            // do nothing
+            if (PC_GetKey(&key)) {                             /* See if key has been pressed              */
+                    if (key == 0x1B) {                             /* Yes, see if it's the ESCAPE key          */
+                        PC_DOSReturn();                            /* Yes, return to DOS                       */
+                    }
+                }
         }
         print_buffer();
         end = OSTimeGet();
@@ -254,11 +266,16 @@ void  Task3 (void *pdata)
     INT32U start;
     INT32U end;
     INT32U toDelay;
+    INT16S  key;
     start = OSTimeGet();
     pdata = pdata;
     while(1){
         while(OSTCBCur->compTime > 0){
-            // do nothing
+            if (PC_GetKey(&key)) {                             /* See if key has been pressed              */
+                    if (key == 0x1B) {                             /* Yes, see if it's the ESCAPE key          */
+                        PC_DOSReturn();                            /* Yes, return to DOS                       */
+                    }
+                }
         }
         print_buffer();
         end = OSTimeGet();
