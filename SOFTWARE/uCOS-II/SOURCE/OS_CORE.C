@@ -186,14 +186,25 @@ void  OSIntExit (void)
             OSPrioHighRdy = (INT8U)((OSIntExitY << 3) + OSUnMapTbl[OSRdyTbl[OSIntExitY]]);
             if (OSPrioHighRdy != OSPrioCur) {              /* No Ctx Sw if current task is highest rdy */
                 if(OSPrioHighRdy != 1 && OSPrioCur != 1){
-                    sprintf(lab1_output+strlen(lab1_output),"%8ld    preempt %5d  %5d\n", (INT32U)OSTime,OSPrioCur, OSPrioHighRdy);
+                    //sprintf(lab1_output+strlen(lab1_output),"%8ld    preempt %5d  %5d\n", (INT32U)OSTime,OSPrioCur, OSPrioHighRdy);
+                    
+                    lab1_output[lab1_pos][0] = OSTimeGet();
+                    lab1_output[lab1_pos][1] = PREEMPT;
+                    lab1_output[lab1_pos][2] = (INT32U)OSPrioCur;
+                    lab1_output[lab1_pos][3] = OSPrioHighRdy;
+                    lab1_pos = (lab1_pos + 1)% OUTPUT_ROW_N;
                 }
                 else if(OSPrioHighRdy == 1){
                     prev_print_prio = OSPrioCur;
                 }
                 else if(OSPrioCur == 1){
                     if(prev_print_prio != OSPrioHighRdy){
-                        sprintf(lab1_output+strlen(lab1_output),"%8ld    preempt %5d  %5d\n", (INT32U)OSTime,prev_print_prio, OSPrioHighRdy);
+                        //sprintf(lab1_output+strlen(lab1_output),"%8ld    preempt %5d  %5d\n", (INT32U)OSTime,prev_print_prio, OSPrioHighRdy);
+                        lab1_output[lab1_pos][0] = OSTimeGet();
+                        lab1_output[lab1_pos][1] = PREEMPT;
+                        lab1_output[lab1_pos][2] = (INT32U)prev_print_prio;
+                        lab1_output[lab1_pos][3] = OSPrioHighRdy;
+                        lab1_pos = (lab1_pos + 1)% OUTPUT_ROW_N;
                     }
                     prev_print_prio = -1;
                 }
@@ -901,14 +912,24 @@ void  OS_Sched (void)
         OSPrioHighRdy = (INT8U)((y << 3) + OSUnMapTbl[OSRdyTbl[y]]);
         if (OSPrioHighRdy != OSPrioCur) {              /* No Ctx Sw if current task is highest rdy     */
             if(OSPrioHighRdy != 1 && OSPrioCur != 1){
-                sprintf(lab1_output+strlen(lab1_output),"%8ld    complete %5d  %5d\n", (INT32U)OSTime,OSPrioCur, OSPrioHighRdy);
+                //sprintf(lab1_output+strlen(lab1_output),"%8ld    complete %5d  %5d\n", (INT32U)OSTime,OSPrioCur, OSPrioHighRdy);
+                lab1_output[lab1_pos][0] = OSTimeGet();
+                lab1_output[lab1_pos][1] = COMPLETE;
+                lab1_output[lab1_pos][2] = (INT32U)OSPrioCur;
+                lab1_output[lab1_pos][3] = OSPrioHighRdy;
+                lab1_pos = (lab1_pos + 1)% OUTPUT_ROW_N;
             }
             else if(OSPrioHighRdy == 1){
                 prev_print_prio = OSPrioCur;
             }
             else if(OSPrioCur == 1){
                 if(prev_print_prio != OSPrioHighRdy){
-                    sprintf(lab1_output+strlen(lab1_output),"%8ld    complete %5d  %5d\n", (INT32U)OSTime,prev_print_prio, OSPrioHighRdy);
+                    //sprintf(lab1_output+strlen(lab1_output),"%8ld    complete %5d  %5d\n", (INT32U)OSTime,prev_print_prio, OSPrioHighRdy);
+                    lab1_output[lab1_pos][0] = OSTimeGet();
+                    lab1_output[lab1_pos][1] = COMPLETE;
+                    lab1_output[lab1_pos][2] = (INT32U)prev_print_prio;
+                    lab1_output[lab1_pos][3] = OSPrioHighRdy;
+                    lab1_pos = (lab1_pos + 1)% OUTPUT_ROW_N;
                 }
                 prev_print_prio = -1;
             }

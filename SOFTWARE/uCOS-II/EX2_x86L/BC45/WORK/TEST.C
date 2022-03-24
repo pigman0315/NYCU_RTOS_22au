@@ -47,8 +47,6 @@
 
 
 
-
-
 /*
 *********************************************************************************************************
 *                                              VARIABLES
@@ -61,7 +59,7 @@ OS_STK        Task1Stk[TASK_STK_SIZE];                /* Task #1    task stack  
 OS_STK        Task2Stk[TASK_STK_SIZE];                /* Task #2    task stack                         */
 OS_STK        Task3Stk[TASK_STK_SIZE];                /* Task #3    task stack                         */
 INT8U         TASK_INFO[TASK_NUM][2] = {{1,3},{3,6},{4,9}};
-INT8U         TASK_PRIO[TASK_NUM] = {4, 2, 3};
+INT8U         TASK_PRIO[TASK_NUM] = {2, 3, 4};
 INT32U        TASK_CNT[TASK_NUM] = {0, 0, 0};
 
 /*
@@ -77,7 +75,6 @@ static  void  TaskStartCreateTasks(void);
         void  Task2(void *data);
         void  Task3(void *data);
         void  print_buffer();
-        void  RM_sort();
 
 
 
@@ -124,13 +121,16 @@ void main (void)
 
 void print_buffer()
 {
-    if(lab1_output[0] != '\0'){
-        OS_ENTER_CRITICAL();
-            //PC_DispStr(0, (++lab1_print_cnt)%30, lab1_output, DISP_FGND_WHITE); // for PC
-            printf("%s",lab1_output);
-            memset(lab1_output, 0, sizeof(lab1_output));
-        OS_EXIT_CRITICAL();
+    INT16U i;
+    for(i = 0;i < lab1_pos;i++){
+        if(lab1_output[i][1] == COMPLETE){
+            printf("%8ld    complete   %5ld    %5ld\n",lab1_output[i][0],lab1_output[i][2],lab1_output[i][3]);
+        }
+        else{
+            printf("%8ld    preempt    %5ld    %5ld\n",lab1_output[i][0],lab1_output[i][2],lab1_output[i][3]);
+        }
     }
+    lab1_pos = 0;
 }
 
 void  TaskStart (void *pdata)
@@ -151,25 +151,12 @@ void  TaskStart (void *pdata)
 
     OSStatInit();                                          /* Initialize uC/OS-II's statistics         */
 
-    memset(lab1_output, 0, sizeof(lab1_output));           /* lab1                                     */
-    lab1_print_cnt = 0;                                    /* lab1                                     */
+    lab1_pos = 0;                                          /* lab1                                     */
     prev_print_prio = -1;                                  /* lab1                                     */
 
     TaskStartCreateTasks();                                /* Create all other tasks                   */
     OSTimeSet(0);
     OSTaskDel(TASK_START_PRIO);
-
-    // for (;;) {
-
-    //     if (PC_GetKey(&key)) {                             /* See if key has been pressed              */
-    //         if (key == 0x1B) {                             /* Yes, see if it's the ESCAPE key          */
-    //             PC_DOSReturn();                            /* Yes, return to DOS                       */
-    //         }
-    //     }
-
-    //     OSCtxSwCtr = 0;                                    /* Clear context switch counter             */
-    //     OSTimeDly(OS_TICKS_PER_SEC);                       /* Wait one second                          */
-    // }
 }
 
 static  void  TaskStartCreateTasks (void)
@@ -225,9 +212,9 @@ static  void  TaskStartCreateTasks (void)
 
 void  Task1 (void *pdata)
 {
-    INT32U start;
-    INT32U end;
-    INT32U toDelay;
+    int start;
+    int end;
+    int toDelay;
     INT16S  key;
     start = OSTimeGet();
     pdata = pdata;
@@ -244,20 +231,22 @@ void  Task1 (void *pdata)
         TASK_CNT[0]++;
         OS_EXIT_CRITICAL();
         end = OSTimeGet();
-        toDelay = (OSTCBCur->period) - (end-start);
+        toDelay = (int)(OSTCBCur->period) - (end-start);
         start = start + (OSTCBCur->period);
         OS_ENTER_CRITICAL();
             OSTCBCur->compTime = TASK_INFO[0][0];
         OS_EXIT_CRITICAL();
+        if(toDelay < 0)
+            toDelay = 0;
         OSTimeDly(toDelay);
     }
 }
 
 void  Task2 (void *pdata)
 {
-    INT32U start;
-    INT32U end;
-    INT32U toDelay;
+    int start;
+    int end;
+    int toDelay;
     INT16S  key;
     start = OSTimeGet();
     pdata = pdata;
@@ -273,19 +262,21 @@ void  Task2 (void *pdata)
         TASK_CNT[1]++;
         OS_EXIT_CRITICAL();
         end = OSTimeGet();
-        toDelay = (OSTCBCur->period) - (end-start);
+        toDelay = (int)(OSTCBCur->period) - (end-start);
         start = start + (OSTCBCur->period);
         OS_ENTER_CRITICAL();
             OSTCBCur->compTime = TASK_INFO[1][0];
         OS_EXIT_CRITICAL();
+        if(toDelay < 0)
+            toDelay = 0;
         OSTimeDly(toDelay);
     }
 }
 void  Task3 (void *pdata)
 {
-    INT32U start;
-    INT32U end;
-    INT32U toDelay;
+    int start;
+    int end;
+    int toDelay;
     INT16S  key;
     start = OSTimeGet();
     pdata = pdata;
@@ -301,12 +292,16 @@ void  Task3 (void *pdata)
         TASK_CNT[2]++;
         OS_EXIT_CRITICAL();
         end = OSTimeGet();
-        toDelay = (OSTCBCur->period) - (end-start);
+        toDelay = (int)(OSTCBCur->period) - (end-start);
         start = start + (OSTCBCur->period);
         OS_ENTER_CRITICAL();
             OSTCBCur->compTime = TASK_INFO[2][0];
         OS_EXIT_CRITICAL();
+        
+        if(toDelay < 0)
+            toDelay = 0;
         OSTimeDly(toDelay);
+        
     }
 }
 
@@ -316,42 +311,14 @@ void  TaskPrint (void *pdata)
     INT32U start;
     INT32U end;
     INT8U i;
-    BOOLEAN violation = FALSE;
     pdata = pdata;
     
     while(1){
         start = OSTimeGet();
-        for(i = 0;i < TASK_NUM;i++){
-            // memset(lab1_output, 0, sizeof(lab1_output));
-            // sprintf(lab1_output,"Deadline violation %ld, %d, %d, %ld\n", start, i, TASK_INFO[i][1],  TASK_CNT[(INT32U)i]);
-            // printf("%s",lab1_output);
+        print_buffer();
+        for(i = 0;i < TASK_NUM; i++){
             if(start/(INT32U)TASK_INFO[i][1] > (INT32U)TASK_CNT[(INT32U)i]){
-                violation = TRUE;
-                //PC_DispStr(0, (++lab1_print_cnt)%30, lab1_output, DISP_FGND_WHITE); // for PC
-                memset(lab1_output, 0, sizeof(lab1_output));
-                sprintf(lab1_output,"Deadline violation %ld, %d, %d, %ld\n", start, i, TASK_INFO[i][1],  TASK_CNT[(INT32U)i]);
-                printf("%s",lab1_output);
-            }
-        }
-        if(violation == TRUE){
-            // do nothing
-            OS_ENTER_CRITICAL();
-            //PC_DispStr(0, (++lab1_print_cnt)%30, lab1_output, DISP_FGND_WHITE); // for PC
-            memset(lab1_output, 0, sizeof(lab1_output));
-            sprintf(lab1_output,"Deadline violation\n");
-            printf("%s",lab1_output);
-            OS_EXIT_CRITICAL();
-            OSTimeDly(1000);
-            PC_DOSReturn();  
-            //OSTaskDel(TASK_PRINT_PRIO);
-        }
-        else{
-            print_buffer();
-        }
-            
-        if (PC_GetKey(&key)) {                             /* See if key has been pressed              */
-            if (key == 0x1B) {                             /* Yes, see if it's the ESCAPE key          */
-                PC_DOSReturn();                            /* Yes, return to DOS                       */
+                printf("Deadline violation(Task %d)\n",i+1);
             }
         }
         end = OSTimeGet();
@@ -360,26 +327,5 @@ void  TaskPrint (void *pdata)
         OS_EXIT_CRITICAL();
         OSTimeDly(10);
     }
-}
-
-void RM_sort(){
-    // DO NOTHING
-
-    // if(TASK_NUM == 2){
-    //     if(TASK_info[0][0]/TASK_info[0][1] < TASK_info[1][0]/TASK_info[1][1]){
-    //         TASK_prio = {2,1};
-    //     }
-    //     else{
-    //         TASK_prio = {1,2};
-    //     }
-    // }
-    // else if(TASK_NUM == 3){
-    //     if(TASK_info[0][0]/TASK_info[0][1] >= TASK_info[1][0]/TASK_info[1][1]){
-    //         if(TASK_info[1][0]/TASK_info[1][1] >= TASK_info[2][0]/TASK_info[2][1]){
-    //             TASK_prio = {1,2,3};
-    //         }
-    //         el
-    //     }
-    // }
 }
 

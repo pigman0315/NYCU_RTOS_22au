@@ -419,8 +419,12 @@ typedef struct os_tcb {
 *********************************************************************************************************
 */
 // Lab1 global variables
-OS_EXT INT16U lab1_print_cnt;
-OS_EXT char lab1_output[4096];
+#define PREEMPT 1
+#define COMPLETE 0
+#define OUTPUT_ROW_N 25
+
+OS_EXT INT32U lab1_output[OUTPUT_ROW_N][4];
+OS_EXT INT32U lab1_pos;
 OS_EXT INT8U prev_print_prio;
 
 OS_EXT  INT32U            OSCtxSwCtr;               /* Counter of number of context switches           */
