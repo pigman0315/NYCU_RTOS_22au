@@ -21,12 +21,13 @@
 #define          TASK_STK_SIZE     512                /* Size of each task's stacks (# of WORDs)       */
 
 #define          TASK_START_ID       0                /* Application tasks IDs                         */
-#define          TASK_1_ID           1
-#define          TASK_2_ID           2
-#define          TASK_3_ID           3
+#define          TASK_PRINT_ID       1
+#define          TASK_1_ID           2
+#define          TASK_2_ID           3
+#define          TASK_3_ID           4
 
 #define          TASK_START_PRIO    0                /* Application tasks priorities                  */
-// #define          TASK_CLK_PRIO      11
+#define          TASK_PRINT_PRIO      1
 // #define          TASK_1_PRIO        12
 // #define          TASK_2_PRIO        13
 // #define          TASK_3_PRIO        14
@@ -59,8 +60,8 @@ OS_STK        TaskClkStk[TASK_STK_SIZE];              /* Clock      task stack  
 OS_STK        Task1Stk[TASK_STK_SIZE];                /* Task #1    task stack                         */
 OS_STK        Task2Stk[TASK_STK_SIZE];                /* Task #2    task stack                         */
 OS_STK        Task3Stk[TASK_STK_SIZE];                /* Task #3    task stack                         */
-INT8U         TASK_INFO[TASK_NUM][2] = {{1,4},{1,4},{1,4}};
-INT8U         TASK_PRIO[TASK_NUM] = {1, 2, 3};
+INT8U         TASK_INFO[TASK_NUM][2] = {{4,8},{3,8},{1,8}};
+INT8U         TASK_PRIO[TASK_NUM] = {2, 3, 4};
 
 /*
 *********************************************************************************************************
@@ -69,6 +70,7 @@ INT8U         TASK_PRIO[TASK_NUM] = {1, 2, 3};
 */
 
         void  TaskStart(void *data);                  /* Function prototypes of tasks                  */
+        void  TaskPrint(void *data);
 static  void  TaskStartCreateTasks(void);
         void  Task1(void *data);
         void  Task2(void *data);
@@ -150,6 +152,7 @@ void  TaskStart (void *pdata)
 
     memset(lab1_output, 0, sizeof(lab1_output));           /* lab1                                     */
     lab1_print_cnt = 0;                                    /* lab1                                     */
+    prev_print_prio = -1;                                  /* lab1                                     */
 
     TaskStartCreateTasks();                                /* Create all other tasks                   */
     OSTimeSet(0);
@@ -170,6 +173,18 @@ void  TaskStart (void *pdata)
 
 static  void  TaskStartCreateTasks (void)
 {
+     OSTaskCreateExt(TaskPrint,
+                   (void *)0,
+                   &TaskClkStk[TASK_STK_SIZE - 1],
+                   TASK_PRINT_PRIO,
+                   TASK_PRINT_ID,
+                   &TaskClkStk[0],
+                   TASK_STK_SIZE,
+                   (void *)0,
+                   OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR,
+                   0,
+                   0);
+
     OSTaskCreateExt(Task1,
                    (void *)0,
                    &Task1Stk[TASK_STK_SIZE - 1],
@@ -218,13 +233,13 @@ void  Task1 (void *pdata)
     
     while(1){
         while(OSTCBCur->compTime > 0){
-                if (PC_GetKey(&key)) {                             /* See if key has been pressed              */
-                    if (key == 0x1B) {                             /* Yes, see if it's the ESCAPE key          */
-                        PC_DOSReturn();                            /* Yes, return to DOS                       */
-                    }
+            if (PC_GetKey(&key)) {                             /* See if key has been pressed              */
+                if (key == 0x1B) {                             /* Yes, see if it's the ESCAPE key          */
+                    PC_DOSReturn();                            /* Yes, return to DOS                       */
                 }
+            }
         }
-        print_buffer();
+        //print_buffer();
         end = OSTimeGet();
         toDelay = (OSTCBCur->period) - (end-start);
         start = start + (OSTCBCur->period);
@@ -246,12 +261,12 @@ void  Task2 (void *pdata)
     while(1){
         while(OSTCBCur->compTime > 0){
             if (PC_GetKey(&key)) {                             /* See if key has been pressed              */
-                    if (key == 0x1B) {                             /* Yes, see if it's the ESCAPE key          */
-                        PC_DOSReturn();                            /* Yes, return to DOS                       */
-                    }
+                if (key == 0x1B) {                             /* Yes, see if it's the ESCAPE key          */
+                    PC_DOSReturn();                            /* Yes, return to DOS                       */
                 }
+            }
         }
-        print_buffer();
+        //print_buffer();
         end = OSTimeGet();
         toDelay = (OSTCBCur->period) - (end-start);
         start = start + (OSTCBCur->period);
@@ -272,12 +287,12 @@ void  Task3 (void *pdata)
     while(1){
         while(OSTCBCur->compTime > 0){
             if (PC_GetKey(&key)) {                             /* See if key has been pressed              */
-                    if (key == 0x1B) {                             /* Yes, see if it's the ESCAPE key          */
-                        PC_DOSReturn();                            /* Yes, return to DOS                       */
-                    }
+                if (key == 0x1B) {                             /* Yes, see if it's the ESCAPE key          */
+                    PC_DOSReturn();                            /* Yes, return to DOS                       */
                 }
+            }
         }
-        print_buffer();
+        //print_buffer();
         end = OSTimeGet();
         toDelay = (OSTCBCur->period) - (end-start);
         start = start + (OSTCBCur->period);
@@ -285,6 +300,29 @@ void  Task3 (void *pdata)
             OSTCBCur->compTime = TASK_INFO[2][0];
         OS_EXIT_CRITICAL();
         OSTimeDly(toDelay);
+    }
+}
+
+void  TaskPrint (void *pdata)
+{
+    INT16S  key;
+    INT32U start;
+    INT32U end;
+    pdata = pdata;
+    
+    while(1){
+        start = OSTimeGet();
+        print_buffer();
+        if (PC_GetKey(&key)) {                             /* See if key has been pressed              */
+            if (key == 0x1B) {                             /* Yes, see if it's the ESCAPE key          */
+                PC_DOSReturn();                            /* Yes, return to DOS                       */
+            }
+        }
+        end = OSTimeGet();
+        OS_ENTER_CRITICAL();
+        OSTime -= (end-start);
+        OS_EXIT_CRITICAL();
+        OSTimeDly(10);
     }
 }
 

@@ -185,7 +185,18 @@ void  OSIntExit (void)
             OSIntExitY    = OSUnMapTbl[OSRdyGrp];          /* ... and not locked.                      */
             OSPrioHighRdy = (INT8U)((OSIntExitY << 3) + OSUnMapTbl[OSRdyTbl[OSIntExitY]]);
             if (OSPrioHighRdy != OSPrioCur) {              /* No Ctx Sw if current task is highest rdy */
-                sprintf(lab1_output+strlen(lab1_output),"%8ld    preempt %5d  %5d\n", (INT32U)OSTime,OSPrioCur, OSPrioHighRdy);
+                if(OSPrioHighRdy != 1 && OSPrioCur != 1){
+                    sprintf(lab1_output+strlen(lab1_output),"%8ld    preempt %5d  %5d\n", (INT32U)OSTime,OSPrioCur, OSPrioHighRdy);
+                }
+                else if(OSPrioHighRdy == 1){
+                    prev_print_prio = OSPrioCur;
+                }
+                else if(OSPrioCur == 1){
+                    if(prev_print_prio != OSPrioHighRdy){
+                        sprintf(lab1_output+strlen(lab1_output),"%8ld    preempt %5d  %5d\n", (INT32U)OSTime,prev_print_prio, OSPrioHighRdy);
+                    }
+                    prev_print_prio = -1;
+                }
                 OSTCBHighRdy  = OSTCBPrioTbl[OSPrioHighRdy];
                 OSCtxSwCtr++;                              /* Keep track of the number of ctx switches */
                 OSIntCtxSw();                              /* Perform interrupt level ctx switch       */
@@ -889,7 +900,18 @@ void  OS_Sched (void)
         y             = OSUnMapTbl[OSRdyGrp];          /* Get pointer to HPT ready to run              */
         OSPrioHighRdy = (INT8U)((y << 3) + OSUnMapTbl[OSRdyTbl[y]]);
         if (OSPrioHighRdy != OSPrioCur) {              /* No Ctx Sw if current task is highest rdy     */
-            sprintf(lab1_output+strlen(lab1_output),"%8ld    complete %5d  %5d\n", (INT32U)OSTime,OSPrioCur, OSPrioHighRdy);
+            if(OSPrioHighRdy != 1 && OSPrioCur != 1){
+                sprintf(lab1_output+strlen(lab1_output),"%8ld    complete %5d  %5d\n", (INT32U)OSTime,OSPrioCur, OSPrioHighRdy);
+            }
+            else if(OSPrioHighRdy == 1){
+                prev_print_prio = OSPrioCur;
+            }
+            else if(OSPrioCur == 1){
+                if(prev_print_prio != OSPrioHighRdy){
+                    sprintf(lab1_output+strlen(lab1_output),"%8ld    complete %5d  %5d\n", (INT32U)OSTime,prev_print_prio, OSPrioHighRdy);
+                }
+                prev_print_prio = -1;
+            }
             OSTCBHighRdy = OSTCBPrioTbl[OSPrioHighRdy];
             OSCtxSwCtr++;                              /* Increment context switch counter             */
             OS_TASK_SW();                              /* Perform a context switch                     */
