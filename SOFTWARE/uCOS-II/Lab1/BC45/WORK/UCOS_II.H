@@ -408,9 +408,8 @@ typedef struct os_tcb {
 #if OS_TASK_DEL_EN > 0
     BOOLEAN        OSTCBDelReq;        /* Indicates whether a task needs to delete itself              */
 #endif
-    INT32U          compTime;          /* Lab1 simulate RM task                                        */
-    INT32U          period;            /* Lab1 simulate RM task                                        */
-    INT32U          next_ddl;          /* Lab2 EDF next deadline                                       */
+    INT32U          compTime;
+    INT32U          period;
 } OS_TCB;
 
 /*$PAGE*/
