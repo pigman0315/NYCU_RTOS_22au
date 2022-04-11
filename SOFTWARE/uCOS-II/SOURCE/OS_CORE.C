@@ -83,7 +83,7 @@ static  void  OS_InitTCBList(void);
 */
 INT8U EDF_search(void){
     INT8U target = OS_IDLE_PRIO;
-    INT32U cur_min_ddl = 1000000;
+    INT32U cur_min_ddl = 100000;
     OS_TCB    *ptcb;
     ptcb = OSTCBList;    
     
@@ -94,8 +94,9 @@ INT8U EDF_search(void){
             OS_ENTER_CRITICAL();
             //printf("-  %ld\n", cur_min_ddl);
             if (!ptcb->OSTCBDly && (ptcb->OSTCBPrio == 0 || ptcb->OSTCBPrio == 1 || ptcb->OSTCBPrio == 2 || ptcb->OSTCBPrio == 3)){        
-                if(ptcb->next_ddl <= cur_min_ddl && (ptcb->OSTCBPrio < target)){         
-                    cur_min_ddl = ptcb->next_ddl;
+                //if(ptcb->next_ddl <= cur_min_ddl && (ptcb->OSTCBPrio < target)){ 
+                if(ptcb->next_ddl < cur_min_ddl){           
+                    cur_min_ddl = ptcb->next_ddl; 
                     target = ptcb->OSTCBPrio;
                 }
             }
