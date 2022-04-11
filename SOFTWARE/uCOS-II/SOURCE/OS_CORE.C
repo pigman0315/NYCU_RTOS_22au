@@ -82,69 +82,31 @@ static  void  OS_InitTCBList(void);
 *********************************************************************************************************
 */
 INT8U EDF_search(void){
+    INT8U target = OS_IDLE_PRIO;
+    INT32U cur_min_ddl = 1000000;
     OS_TCB    *ptcb;
-    INT8U prioHighRdy=OS_IDLE_PRIO;
-    INT16U deadLine=10000;
-    //printTCBList();
-    ptcb = OSTCBList;                                  /* Point at first TCB in TCB list           */
-    while(ptcb->OSTCBPrio==1 || ptcb->OSTCBPrio==2 || ptcb->OSTCBPrio==3 || ptcb->OSTCBPrio==0){
-        if(ptcb->OSTCBStat==OS_STAT_RDY && !ptcb->OSTCBDly && ptcb->next_ddl < deadLine){
-            prioHighRdy = ptcb->OSTCBPrio;
-            deadLine = ptcb->next_ddl;
-        }
-        //printf("Priority:%d\tDeadline:%d\tOSTCBDly:%d,compTime %d\n", (int)ptcb->OSTCBPrio,(int) ptcb->next_ddl,(int) ptcb->OSTCBDly,(int)ptcb->compTime);
-        ptcb = ptcb->OSTCBNext;                        /* Point at next TCB in TCB list            */
-    }
-    //printf("select Priority:%d\n",(int)prioHighRdy);
-    //sprintf(&CtxSwMessage[CtxSwMessageTop++],"time %d,deadline %d ,prioHighRdy %d, curPrio %d\n",(int)OSTime,(int)deadLine,(int)prioHighRdy,(int)OSPrioCur);
-    return prioHighRdy;
-}
-// INT8U EDF_search(void){
-//     INT8U target = OSTCBCur->OSTCBPrio;
-//     INT32U cur_min_ddl = 1000000;
-//     OS_TCB    *ptcb;
-//     ptcb = OSTCBList;     
+    ptcb = OSTCBList;    
     
-//     if (OSRunning == TRUE) {    
-//         //printf("%5ld\n", (INT32U)OSTCBCur->OSTCBPrio);
-//         ptcb = OSTCBList;                                  /* Point at first TCB in TCB list           */
-        
-//         while (ptcb != (OS_TCB *)0) {          /* Go through all TCBs in TCB list          */
-//             // printf("   s -  %u\n", (unsigned int)ptcb->OSTCBPrio);
-//             OS_ENTER_CRITICAL();
-//             //printf("-  %ld\n", cur_min_ddl);
-//             if (ptcb->OSTCBStat == OS_STAT_RDY){         
-//                 if(ptcb->next_ddl < cur_min_ddl){         
-//                     cur_min_ddl = ptcb->next_ddl;
-//                     target = ptcb->OSTCBPrio;
-//                 }
-//             }
-//             ptcb = ptcb->OSTCBNext;                        /* Point at next TCB in TCB list            */
-//             OS_EXIT_CRITICAL();
-//         }
-//     }
-
-//     // while (ptcb != (OS_TCB *)0) {          /* Go through all TCBs in TCB list          */
-//     //     OS_ENTER_CRITICAL();
-//     //     //printf("in while\n");
-//     //     if (ptcb->OSTCBStat == OS_STAT_RDY){
-//     //         if(ptcb->next_ddl < cur_min_ddl){
-//     //             cur_min_ddl = ptcb->next_ddl;
-//     //             target = ptcb->OSTCBPrio;
-//     //         }
-//     //     }
-//     //     ptcb = ptcb->OSTCBNext;                        /* Point at next TCB in TCB list            */
-//     //     OS_EXIT_CRITICAL();
-//     // }
-//     //printf("%u\n", target);
-//     //target = 1;
-//     return target;
-
-// }
+    if (OSRunning == TRUE && (unsigned int)ptcb->OSTCBPrio < 10) {    
+        //printf("cur prio: %5ld, %ld\n", (INT32U)OSTCBCur->OSTCBPrio,OSTCBCur->next_ddl);
+        while (ptcb != (OS_TCB *)0) {          /* Go through all TCBs in TCB list          */
+            //printf("cur prio %u\n", (unsigned int)ptcb->OSTCBPrio);
+            OS_ENTER_CRITICAL();
+            //printf("-  %ld\n", cur_min_ddl);
+            if (!ptcb->OSTCBDly){        
+                if(ptcb->next_ddl < cur_min_ddl){         
+                    cur_min_ddl = ptcb->next_ddl;
+                    target = ptcb->OSTCBPrio;
+                }
+            }
+            ptcb = ptcb->OSTCBNext;                        /* Point at next TCB in TCB list            */
+            OS_EXIT_CRITICAL();
+        }
+    }
+    return target;
+}
 
 
-
-/*$PAGE*/
 /*
 *********************************************************************************************************
 *                                             INITIALIZATION
@@ -333,8 +295,6 @@ void  OSStart (void)
         y             = OSUnMapTbl[OSRdyGrp];        /* Find highest priority's task priority number   */
         x             = OSUnMapTbl[OSRdyTbl[y]];
         OSPrioHighRdy = (INT8U)((y << 3) + x);
-        // printf("%u\n", (unsigned int)OSPrioHighRdy);
-        OSPrioHighRdy = (INT8U)1;
         OSPrioCur     = OSPrioHighRdy;
         OSTCBHighRdy  = OSTCBPrioTbl[OSPrioHighRdy]; /* Point to highest priority task ready to run    */
 
@@ -772,7 +732,7 @@ static  void  OS_InitTaskIdle (void)
                           (void *)0,                                 /* No TCB extension                     */
                           OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR,
                           0,
-                          1<<16); /* give idle task large ddl to prevent occupying EDF */
+                          100000); /* give idle task large ddl to prevent occupying EDF */
     #else
     (void)OSTaskCreateExt(OS_TaskIdle,
                           (void *)0,                                 /* No arguments passed to OS_TaskIdle() */
@@ -784,7 +744,7 @@ static  void  OS_InitTaskIdle (void)
                           (void *)0,                                 /* No TCB extension                     */
                           OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR,
                           0,
-                          1<<16); /* give idle task large ddl to prevent occupying EDF */
+                          100000); /* give idle task large ddl to prevent occupying EDF */
     #endif
 #else
     #if OS_STK_GROWTH == 1
@@ -829,7 +789,7 @@ static  void  OS_InitTaskStat (void)
                           (void *)0,                                   /* No TCB extension               */
                           OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR,
                           0,
-                          1<<16);  /* give stat task large ddl to prevent occupying EDF */
+                          100000);  /* give stat task large ddl to prevent occupying EDF */
     #else
     (void)OSTaskCreateExt(OS_TaskStat,
                           (void *)0,                                   /* No args passed to OS_TaskStat()*/
@@ -841,7 +801,7 @@ static  void  OS_InitTaskStat (void)
                           (void *)0,                                   /* No TCB extension               */
                           OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR,
                           0,
-                          1<<16);  /* give stat task large ddl to prevent occupying EDF */
+                          100000);  /* give stat task large ddl to prevent occupying EDF */
     #endif
 #else
     #if OS_STK_GROWTH == 1
@@ -923,35 +883,19 @@ void  OS_Sched (void)
 #endif    
     INT8U      y;
 
-
+    //printf("get in sched\n");
     OS_ENTER_CRITICAL();
     if ((OSIntNesting == 0) && (OSLockNesting == 0)) { /* Sched. only if all ISRs done & not locked    */
-        // y             = OSUnMapTbl[OSRdyGrp];          /* Get pointer to HPT ready to run              */
-        // OSPrioHighRdy = (INT8U)((y << 3) + OSUnMapTbl[OSRdyTbl[y]]);
+        //y             = OSUnMapTbl[OSRdyGrp];          /* Get pointer to HPT ready to run              */
+        //OSPrioHighRdy = (INT8U)((y << 3) + OSUnMapTbl[OSRdyTbl[y]]);
         OSPrioHighRdy = EDF_search();
-        if (OSPrioHighRdy != OSPrioCur) {              /* No Ctx Sw if current task is highest rdy     */
-            if(OSPrioHighRdy != 1 && OSPrioCur != 1){
-                //sprintf(lab1_output+strlen(lab1_output),"%8ld    complete %5d  %5d\n", (INT32U)OSTime,OSPrioCur, OSPrioHighRdy);
-                lab1_output[lab1_pos][0] = OSTimeGet();
-                lab1_output[lab1_pos][1] = COMPLETE;
-                lab1_output[lab1_pos][2] = (INT32U)OSPrioCur;
-                lab1_output[lab1_pos][3] = OSPrioHighRdy;
-                lab1_pos = (lab1_pos + 1)% OUTPUT_ROW_N;
-            }
-            else if(OSPrioHighRdy == 1){
-                prev_print_prio = OSPrioCur;
-            }
-            else if(OSPrioCur == 1){
-                if(prev_print_prio != OSPrioHighRdy){
-                    //sprintf(lab1_output+strlen(lab1_output),"%8ld    complete %5d  %5d\n", (INT32U)OSTime,prev_print_prio, OSPrioHighRdy);
-                    lab1_output[lab1_pos][0] = OSTimeGet();
-                    lab1_output[lab1_pos][1] = COMPLETE;
-                    lab1_output[lab1_pos][2] = (INT32U)prev_print_prio;
-                    lab1_output[lab1_pos][3] = OSPrioHighRdy;
-                    lab1_pos = (lab1_pos + 1)% OUTPUT_ROW_N;
-                }
-                prev_print_prio = -1;
-            }
+        if (OSPrioHighRdy != OSPrioCur && OSPrioHighRdy != 0 && OSPrioCur != 0) {     /* 0 means TaskStart */
+            //printf("%8ld    complete %5d  %5d\n", (INT32U)OSTime,OSPrioCur, OSPrioHighRdy);
+            lab1_output[lab1_pos][0] = OSTimeGet();
+            lab1_output[lab1_pos][1] = COMPLETE;
+            lab1_output[lab1_pos][2] = (INT32U)OSPrioCur;
+            lab1_output[lab1_pos][3] = OSPrioHighRdy;
+            lab1_pos = (lab1_pos + 1)% OUTPUT_ROW_N;
             OSTCBHighRdy = OSTCBPrioTbl[OSPrioHighRdy];
             OSCtxSwCtr++;                              /* Increment context switch counter             */
             OS_TASK_SW();                              /* Perform a context switch                     */
@@ -988,38 +932,22 @@ void  OSIntExit (void)
     
     
     if (OSRunning == TRUE) {
+        //printf("get in exit\n");
         OS_ENTER_CRITICAL();
         if (OSIntNesting > 0) {                            /* Prevent OSIntNesting from wrapping       */
             OSIntNesting--;
         }
         if ((OSIntNesting == 0) && (OSLockNesting == 0)) { /* Reschedule only if all ISRs complete ... */
-            // OSIntExitY    = OSUnMapTbl[OSRdyGrp];          /* ... and not locked.                      */
-            // OSPrioHighRdy = (INT8U)((OSIntExitY << 3) + OSUnMapTbl[OSRdyTbl[OSIntExitY]]);
+            //OSIntExitY    = OSUnMapTbl[OSRdyGrp];          /* ... and not locked.                      */
+            //OSPrioHighRdy = (INT8U)((OSIntExitY << 3) + OSUnMapTbl[OSRdyTbl[OSIntExitY]]);
             OSPrioHighRdy = EDF_search();
             if (OSPrioHighRdy != OSPrioCur) {              /* No Ctx Sw if current task is highest rdy */
-                if(OSPrioHighRdy != 1 && OSPrioCur != 1){
-                    //sprintf(lab1_output+strlen(lab1_output),"%8ld    preempt %5d  %5d\n", (INT32U)OSTime,OSPrioCur, OSPrioHighRdy);
-                    
-                    lab1_output[lab1_pos][0] = OSTimeGet();
-                    lab1_output[lab1_pos][1] = PREEMPT;
-                    lab1_output[lab1_pos][2] = (INT32U)OSPrioCur;
-                    lab1_output[lab1_pos][3] = OSPrioHighRdy;
-                    lab1_pos = (lab1_pos + 1)% OUTPUT_ROW_N;
-                }
-                else if(OSPrioHighRdy == 1){
-                    prev_print_prio = OSPrioCur;
-                }
-                else if(OSPrioCur == 1){
-                    if(prev_print_prio != OSPrioHighRdy){
-                        //sprintf(lab1_output+strlen(lab1_output),"%8ld    preempt %5d  %5d\n", (INT32U)OSTime,prev_print_prio, OSPrioHighRdy);
-                        lab1_output[lab1_pos][0] = OSTimeGet();
-                        lab1_output[lab1_pos][1] = PREEMPT;
-                        lab1_output[lab1_pos][2] = (INT32U)prev_print_prio;
-                        lab1_output[lab1_pos][3] = OSPrioHighRdy;
-                        lab1_pos = (lab1_pos + 1)% OUTPUT_ROW_N;
-                    }
-                    prev_print_prio = -1;
-                }
+                //printf("%8ld    preempt %5d  %5d\n", (INT32U)OSTime,OSPrioCur, OSPrioHighRdy);
+                lab1_output[lab1_pos][0] = OSTimeGet();
+                lab1_output[lab1_pos][1] = PREEMPT;
+                lab1_output[lab1_pos][2] = (INT32U)OSPrioCur;
+                lab1_output[lab1_pos][3] = OSPrioHighRdy;
+                lab1_pos = (lab1_pos + 1)% OUTPUT_ROW_N;
                 OSTCBHighRdy  = OSTCBPrioTbl[OSPrioHighRdy];
                 OSCtxSwCtr++;                              /* Keep track of the number of ctx switches */
                 OSIntCtxSw();                              /* Perform interrupt level ctx switch       */

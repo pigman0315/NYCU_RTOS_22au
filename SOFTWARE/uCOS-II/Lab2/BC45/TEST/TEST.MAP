@@ -2,26 +2,26 @@
  Start  Stop   Length Name               Class
 
  00000H 02519H 0251AH _TEXT              CODE
- 0251AH 02A2DH 00514H TEST_TEXT          CODE
- 02A2EH 02B03H 000D6H OS_CPU_A_TEXT      CODE
- 02B04H 02CD9H 001D6H OS_CPU_C_TEXT      CODE
- 02CDAH 03056H 0037DH PC_TEXT            CODE
- 03057H 06C3DH 03BE7H UCOS_II_TEXT       CODE
- 06C40H 06C40H 00000H _FARDATA           FAR_DATA
- 06C40H 06C40H 00000H _FARBSS            FAR_BSS
- 06C40H 06C40H 00000H _OVERLAY_          OVRINFO
- 06C40H 06C40H 00000H _1STUB_            STUBSEG
- 06C40H 07163H 00524H _DATA              DATA
- 07164H 07165H 00002H _CVTSEG            DATA
- 07166H 0716BH 00006H _SCNSEG            DATA
- 0716CH 0716CH 00000H _CONST             CONST
- 0716CH 07177H 0000CH _INIT_             INITDATA
- 07178H 07178H 00000H _INITEND_          INITDATA
- 07178H 07178H 00000H _EXIT_             EXITDATA
- 07178H 07178H 00000H _EXITEND_          EXITDATA
- 07178H 0A36DH 031F6H _BSS               BSS
- 0A36EH 0A36EH 00000H _BSSEND            BSSEND
- 0A370H 0A3EFH 00080H _STACK             STACK
+ 0251AH 0292EH 00415H TEST_TEXT          CODE
+ 02930H 02A05H 000D6H OS_CPU_A_TEXT      CODE
+ 02A06H 02BDBH 001D6H OS_CPU_C_TEXT      CODE
+ 02BDCH 02F58H 0037DH PC_TEXT            CODE
+ 02F59H 06A36H 03ADEH UCOS_II_TEXT       CODE
+ 06A40H 06A40H 00000H _FARDATA           FAR_DATA
+ 06A40H 06A40H 00000H _FARBSS            FAR_BSS
+ 06A40H 06A40H 00000H _OVERLAY_          OVRINFO
+ 06A40H 06A40H 00000H _1STUB_            STUBSEG
+ 06A40H 06F2FH 004F0H _DATA              DATA
+ 06F30H 06F31H 00002H _CVTSEG            DATA
+ 06F32H 06F37H 00006H _SCNSEG            DATA
+ 06F38H 06F38H 00000H _CONST             CONST
+ 06F38H 06F43H 0000CH _INIT_             INITDATA
+ 06F44H 06F44H 00000H _INITEND_          INITDATA
+ 06F44H 06F44H 00000H _EXIT_             EXITDATA
+ 06F44H 06F44H 00000H _EXITEND_          EXITDATA
+ 06F44H 09D39H 02DF6H _BSS               BSS
+ 09D3AH 09D3AH 00000H _BSSEND            BSSEND
+ 09D40H 09DBFH 00080H _STACK             STACK
 
 
 Detailed map of segments
@@ -74,107 +74,107 @@ Detailed map of segments
  0000:2355 0151 C=CODE   S=_TEXT          G=(none)  M=WRITE      ACBP=28
  0000:24A6 003C C=CODE   S=_TEXT          G=(none)  M=WRITEA     ACBP=28
  0000:24E2 0038 C=CODE   S=_TEXT          G=(none)  M=XFFLUSH    ACBP=28
- 0251:000A 0514 C=CODE   S=TEST_TEXT      G=(none)  M=test.c     ACBP=28
- 02A2:000E 00D6 C=CODE   S=OS_CPU_A_TEXT  G=(none)  M=\SOFTWARE\uCOS-II\Ix86L\BC45\OS_CPU_A.ASM ACBP=48
- 02B0:0004 01D6 C=CODE   S=OS_CPU_C_TEXT  G=(none)  M=os_cpu_c.c ACBP=28
- 02CD:000A 037D C=CODE   S=PC_TEXT        G=(none)  M=pc.c       ACBP=28
- 0305:0007 3BE7 C=CODE   S=UCOS_II_TEXT   G=(none)  M=ucos_ii.c  ACBP=28
- 06C4:0000 0000 C=FAR_DATA S=_FARDATA       G=(none)  M=c0.ASM     ACBP=68
- 06C4:0000 0000 C=FAR_BSS S=_FARBSS        G=(none)  M=c0.ASM     ACBP=68
- 06C4:0000 0000 C=OVRINFO S=_OVERLAY_      G=(none)  M=c0.ASM     ACBP=68
- 06C4:0000 0000 C=STUBSEG S=_1STUB_        G=(none)  M=c0.ASM     ACBP=68
- 06C4:0000 0093 C=DATA   S=_DATA          G=DGROUP  M=c0.ASM     ACBP=68
- 06C4:0094 0083 C=DATA   S=_DATA          G=DGROUP  M=test.c     ACBP=48
- 06C4:0118 0000 C=DATA   S=_DATA          G=DGROUP  M=\SOFTWARE\uCOS-II\Ix86L\BC45\OS_CPU_A.ASM ACBP=48
- 06C4:0118 0000 C=DATA   S=_DATA          G=DGROUP  M=os_cpu_c.c ACBP=48
- 06C4:0118 001F C=DATA   S=_DATA          G=DGROUP  M=pc.c       ACBP=48
- 06C4:0138 0108 C=DATA   S=_DATA          G=DGROUP  M=ucos_ii.c  ACBP=48
- 06C4:0240 0002 C=DATA   S=_DATA          G=DGROUP  M=ATEXIT     ACBP=48
- 06C4:0242 000C C=DATA   S=_DATA          G=DGROUP  M=EXIT       ACBP=48
- 06C4:024E 0190 C=DATA   S=_DATA          G=DGROUP  M=FILES      ACBP=48
- 06C4:03DE 002A C=DATA   S=_DATA          G=DGROUP  M=FILES2     ACBP=48
- 06C4:0408 0000 C=DATA   S=_DATA          G=DGROUP  M=F_LXMUL    ACBP=48
- 06C4:0408 0000 C=DATA   S=_DATA          G=DGROUP  M=GETDATE    ACBP=48
- 06C4:0408 0000 C=DATA   S=_DATA          G=DGROUP  M=H_LDIV     ACBP=48
- 06C4:0408 0000 C=DATA   S=_DATA          G=DGROUP  M=H_LLSH     ACBP=48
- 06C4:0408 0000 C=DATA   S=_DATA          G=DGROUP  M=H_LURSH    ACBP=48
- 06C4:0408 0000 C=DATA   S=_DATA          G=DGROUP  M=H_PADD     ACBP=48
- 06C4:0408 005B C=DATA   S=_DATA          G=DGROUP  M=IOERROR    ACBP=48
- 06C4:0464 0000 C=DATA   S=_DATA          G=DGROUP  M=ISATTY     ACBP=48
- 06C4:0464 0000 C=DATA   S=_DATA          G=DGROUP  M=LONGTOA    ACBP=48
- 06C4:0464 0000 C=DATA   S=_DATA          G=DGROUP  M=LSEEK      ACBP=48
- 06C4:0464 0000 C=DATA   S=_DATA          G=DGROUP  M=N_PCMP     ACBP=48
- 06C4:0464 0000 C=DATA   S=_DATA          G=DGROUP  M=SETUPIO    ACBP=48
- 06C4:0464 0002 C=DATA   S=_DATA          G=DGROUP  M=STKLEN     ACBP=48
- 06C4:0466 0067 C=DATA   S=_DATA          G=DGROUP  M=VPRINTER   ACBP=48
- 06C4:04CE 0000 C=DATA   S=_DATA          G=DGROUP  M=VRAM       ACBP=48
- 06C4:04CE 0002 C=DATA   S=_DATA          G=DGROUP  M=WSCROLL    ACBP=48
- 06C4:04D0 0000 C=DATA   S=_DATA          G=DGROUP  M=CPRINTF    ACBP=48
- 06C4:04D0 0018 C=DATA   S=_DATA          G=DGROUP  M=CRTINIT    ACBP=48
- 06C4:04E8 0031 C=DATA   S=_DATA          G=DGROUP  M=CVTFAK     ACBP=48
- 06C4:051A 0000 C=DATA   S=_DATA          G=DGROUP  M=FARHEAP    ACBP=48
- 06C4:051A 0002 C=DATA   S=_DATA          G=DGROUP  M=FBRK       ACBP=48
- 06C4:051C 0000 C=DATA   S=_DATA          G=DGROUP  M=GETCH      ACBP=48
- 06C4:051C 0000 C=DATA   S=_DATA          G=DGROUP  M=GPTEXT     ACBP=48
- 06C4:051C 0002 C=DATA   S=_DATA          G=DGROUP  M=KBHIT      ACBP=48
- 06C4:051E 0000 C=DATA   S=_DATA          G=DGROUP  M=MOVETEXT   ACBP=48
- 06C4:051E 0000 C=DATA   S=_DATA          G=DGROUP  M=PUTCH      ACBP=48
- 06C4:051E 0000 C=DATA   S=_DATA          G=DGROUP  M=REALCVT    ACBP=48
- 06C4:051E 0000 C=DATA   S=_DATA          G=DGROUP  M=SCREEN     ACBP=48
- 06C4:051E 0000 C=DATA   S=_DATA          G=DGROUP  M=SCROLL     ACBP=48
- 06C4:051E 0000 C=DATA   S=_DATA          G=DGROUP  M=SETBLOCK   ACBP=48
- 06C4:051E 0000 C=DATA   S=_DATA          G=DGROUP  M=SETJMP     ACBP=48
- 06C4:051E 0000 C=DATA   S=_DATA          G=DGROUP  M=WHEREXY    ACBP=48
- 06C4:051E 0000 C=DATA   S=_DATA          G=DGROUP  M=FFLUSH     ACBP=48
- 06C4:051E 0000 C=DATA   S=_DATA          G=DGROUP  M=FLUSHALL   ACBP=48
- 06C4:051E 0000 C=DATA   S=_DATA          G=DGROUP  M=FSEEK      ACBP=48
- 06C4:051E 0000 C=DATA   S=_DATA          G=DGROUP  M=MEMCPY     ACBP=48
- 06C4:051E 0000 C=DATA   S=_DATA          G=DGROUP  M=PRINTF     ACBP=48
- 06C4:051E 0001 C=DATA   S=_DATA          G=DGROUP  M=PUTC       ACBP=48
- 06C4:0520 0004 C=DATA   S=_DATA          G=DGROUP  M=SETVBUF    ACBP=48
- 06C4:0524 0000 C=DATA   S=_DATA          G=DGROUP  M=SPRINTF    ACBP=48
- 06C4:0524 0000 C=DATA   S=_DATA          G=DGROUP  M=WRITE      ACBP=48
- 06C4:0524 0000 C=DATA   S=_DATA          G=DGROUP  M=WRITEA     ACBP=48
- 06C4:0524 0000 C=DATA   S=_DATA          G=DGROUP  M=XFFLUSH    ACBP=48
- 06C4:0524 0000 C=DATA   S=_CVTSEG        G=DGROUP  M=c0.ASM     ACBP=48
- 06C4:0524 0002 C=DATA   S=_CVTSEG        G=DGROUP  M=CVTFAK     ACBP=48
- 06C4:0526 0000 C=DATA   S=_CVTSEG        G=DGROUP  M=REALCVT    ACBP=48
- 06C4:0526 0000 C=DATA   S=_SCNSEG        G=DGROUP  M=c0.ASM     ACBP=48
- 06C4:0526 0006 C=DATA   S=_SCNSEG        G=DGROUP  M=CVTFAK     ACBP=48
- 06C4:052C 0000 C=CONST  S=_CONST         G=DGROUP  M=c0.ASM     ACBP=48
- 06C4:052C 0000 C=INITDATA S=_INIT_         G=DGROUP  M=c0.ASM     ACBP=48
- 06C4:052C 0006 C=INITDATA S=_INIT_         G=DGROUP  M=SETUPIO    ACBP=48
- 06C4:0532 0006 C=INITDATA S=_INIT_         G=DGROUP  M=CRTINIT    ACBP=48
- 06C4:0538 0000 C=INITDATA S=_INITEND_      G=DGROUP  M=c0.ASM     ACBP=28
- 06C4:0538 0000 C=EXITDATA S=_EXIT_         G=DGROUP  M=c0.ASM     ACBP=48
- 06C4:0538 0000 C=EXITDATA S=_EXITEND_      G=DGROUP  M=c0.ASM     ACBP=28
- 06C4:0538 0000 C=BSS    S=_BSS           G=DGROUP  M=c0.ASM     ACBP=48
- 06C4:0538 1400 C=BSS    S=_BSS           G=DGROUP  M=test.c     ACBP=48
- 06C4:1938 0001 C=BSS    S=_BSS           G=DGROUP  M=os_cpu_c.c ACBP=48
- 06C4:193A 001B C=BSS    S=_BSS           G=DGROUP  M=pc.c       ACBP=48
- 06C4:1956 1D55 C=BSS    S=_BSS           G=DGROUP  M=ucos_ii.c  ACBP=48
- 06C4:36AC 0080 C=BSS    S=_BSS           G=DGROUP  M=ATEXIT     ACBP=48
- 06C4:372C 0000 C=BSS    S=_BSS           G=DGROUP  M=IOERROR    ACBP=48
- 06C4:372C 0000 C=BSS    S=_BSS           G=DGROUP  M=ISATTY     ACBP=48
- 06C4:372C 0000 C=BSS    S=_BSS           G=DGROUP  M=LONGTOA    ACBP=48
- 06C4:372C 0000 C=BSS    S=_BSS           G=DGROUP  M=LSEEK      ACBP=48
- 06C4:372C 0000 C=BSS    S=_BSS           G=DGROUP  M=SETUPIO    ACBP=48
- 06C4:372C 0000 C=BSS    S=_BSS           G=DGROUP  M=VPRINTER   ACBP=48
- 06C4:372C 0000 C=BSS    S=_BSS           G=DGROUP  M=VRAM       ACBP=48
- 06C4:372C 0000 C=BSS    S=_BSS           G=DGROUP  M=CRTINIT    ACBP=48
- 06C4:372C 0000 C=BSS    S=_BSS           G=DGROUP  M=GETCH      ACBP=48
- 06C4:372C 0000 C=BSS    S=_BSS           G=DGROUP  M=KBHIT      ACBP=48
- 06C4:372C 0000 C=BSS    S=_BSS           G=DGROUP  M=SETBLOCK   ACBP=48
- 06C4:372C 0000 C=BSS    S=_BSS           G=DGROUP  M=SETJMP     ACBP=48
- 06C4:372C 0000 C=BSS    S=_BSS           G=DGROUP  M=MEMCPY     ACBP=48
- 06C4:372C 0001 C=BSS    S=_BSS           G=DGROUP  M=PUTC       ACBP=48
- 06C4:372E 0000 C=BSS    S=_BSS           G=DGROUP  M=WRITEA     ACBP=48
- 06C4:372E 0000 C=BSSEND S=_BSSEND        G=DGROUP  M=c0.ASM     ACBP=28
- 0A37:0000 0080 C=STACK  S=_STACK         G=(none)  M=c0.ASM     ACBP=74
+ 0251:000A 0415 C=CODE   S=TEST_TEXT      G=(none)  M=test.c     ACBP=28
+ 0293:0000 00D6 C=CODE   S=OS_CPU_A_TEXT  G=(none)  M=\SOFTWARE\uCOS-II\Ix86L\BC45\OS_CPU_A.ASM ACBP=48
+ 02A0:0006 01D6 C=CODE   S=OS_CPU_C_TEXT  G=(none)  M=os_cpu_c.c ACBP=28
+ 02BD:000C 037D C=CODE   S=PC_TEXT        G=(none)  M=pc.c       ACBP=28
+ 02F5:0009 3ADE C=CODE   S=UCOS_II_TEXT   G=(none)  M=ucos_ii.c  ACBP=28
+ 06A4:0000 0000 C=FAR_DATA S=_FARDATA       G=(none)  M=c0.ASM     ACBP=68
+ 06A4:0000 0000 C=FAR_BSS S=_FARBSS        G=(none)  M=c0.ASM     ACBP=68
+ 06A4:0000 0000 C=OVRINFO S=_OVERLAY_      G=(none)  M=c0.ASM     ACBP=68
+ 06A4:0000 0000 C=STUBSEG S=_1STUB_        G=(none)  M=c0.ASM     ACBP=68
+ 06A4:0000 0093 C=DATA   S=_DATA          G=DGROUP  M=c0.ASM     ACBP=68
+ 06A4:0094 0050 C=DATA   S=_DATA          G=DGROUP  M=test.c     ACBP=48
+ 06A4:00E4 0000 C=DATA   S=_DATA          G=DGROUP  M=\SOFTWARE\uCOS-II\Ix86L\BC45\OS_CPU_A.ASM ACBP=48
+ 06A4:00E4 0000 C=DATA   S=_DATA          G=DGROUP  M=os_cpu_c.c ACBP=48
+ 06A4:00E4 001F C=DATA   S=_DATA          G=DGROUP  M=pc.c       ACBP=48
+ 06A4:0104 0108 C=DATA   S=_DATA          G=DGROUP  M=ucos_ii.c  ACBP=48
+ 06A4:020C 0002 C=DATA   S=_DATA          G=DGROUP  M=ATEXIT     ACBP=48
+ 06A4:020E 000C C=DATA   S=_DATA          G=DGROUP  M=EXIT       ACBP=48
+ 06A4:021A 0190 C=DATA   S=_DATA          G=DGROUP  M=FILES      ACBP=48
+ 06A4:03AA 002A C=DATA   S=_DATA          G=DGROUP  M=FILES2     ACBP=48
+ 06A4:03D4 0000 C=DATA   S=_DATA          G=DGROUP  M=F_LXMUL    ACBP=48
+ 06A4:03D4 0000 C=DATA   S=_DATA          G=DGROUP  M=GETDATE    ACBP=48
+ 06A4:03D4 0000 C=DATA   S=_DATA          G=DGROUP  M=H_LDIV     ACBP=48
+ 06A4:03D4 0000 C=DATA   S=_DATA          G=DGROUP  M=H_LLSH     ACBP=48
+ 06A4:03D4 0000 C=DATA   S=_DATA          G=DGROUP  M=H_LURSH    ACBP=48
+ 06A4:03D4 0000 C=DATA   S=_DATA          G=DGROUP  M=H_PADD     ACBP=48
+ 06A4:03D4 005B C=DATA   S=_DATA          G=DGROUP  M=IOERROR    ACBP=48
+ 06A4:0430 0000 C=DATA   S=_DATA          G=DGROUP  M=ISATTY     ACBP=48
+ 06A4:0430 0000 C=DATA   S=_DATA          G=DGROUP  M=LONGTOA    ACBP=48
+ 06A4:0430 0000 C=DATA   S=_DATA          G=DGROUP  M=LSEEK      ACBP=48
+ 06A4:0430 0000 C=DATA   S=_DATA          G=DGROUP  M=N_PCMP     ACBP=48
+ 06A4:0430 0000 C=DATA   S=_DATA          G=DGROUP  M=SETUPIO    ACBP=48
+ 06A4:0430 0002 C=DATA   S=_DATA          G=DGROUP  M=STKLEN     ACBP=48
+ 06A4:0432 0067 C=DATA   S=_DATA          G=DGROUP  M=VPRINTER   ACBP=48
+ 06A4:049A 0000 C=DATA   S=_DATA          G=DGROUP  M=VRAM       ACBP=48
+ 06A4:049A 0002 C=DATA   S=_DATA          G=DGROUP  M=WSCROLL    ACBP=48
+ 06A4:049C 0000 C=DATA   S=_DATA          G=DGROUP  M=CPRINTF    ACBP=48
+ 06A4:049C 0018 C=DATA   S=_DATA          G=DGROUP  M=CRTINIT    ACBP=48
+ 06A4:04B4 0031 C=DATA   S=_DATA          G=DGROUP  M=CVTFAK     ACBP=48
+ 06A4:04E6 0000 C=DATA   S=_DATA          G=DGROUP  M=FARHEAP    ACBP=48
+ 06A4:04E6 0002 C=DATA   S=_DATA          G=DGROUP  M=FBRK       ACBP=48
+ 06A4:04E8 0000 C=DATA   S=_DATA          G=DGROUP  M=GETCH      ACBP=48
+ 06A4:04E8 0000 C=DATA   S=_DATA          G=DGROUP  M=GPTEXT     ACBP=48
+ 06A4:04E8 0002 C=DATA   S=_DATA          G=DGROUP  M=KBHIT      ACBP=48
+ 06A4:04EA 0000 C=DATA   S=_DATA          G=DGROUP  M=MOVETEXT   ACBP=48
+ 06A4:04EA 0000 C=DATA   S=_DATA          G=DGROUP  M=PUTCH      ACBP=48
+ 06A4:04EA 0000 C=DATA   S=_DATA          G=DGROUP  M=REALCVT    ACBP=48
+ 06A4:04EA 0000 C=DATA   S=_DATA          G=DGROUP  M=SCREEN     ACBP=48
+ 06A4:04EA 0000 C=DATA   S=_DATA          G=DGROUP  M=SCROLL     ACBP=48
+ 06A4:04EA 0000 C=DATA   S=_DATA          G=DGROUP  M=SETBLOCK   ACBP=48
+ 06A4:04EA 0000 C=DATA   S=_DATA          G=DGROUP  M=SETJMP     ACBP=48
+ 06A4:04EA 0000 C=DATA   S=_DATA          G=DGROUP  M=WHEREXY    ACBP=48
+ 06A4:04EA 0000 C=DATA   S=_DATA          G=DGROUP  M=FFLUSH     ACBP=48
+ 06A4:04EA 0000 C=DATA   S=_DATA          G=DGROUP  M=FLUSHALL   ACBP=48
+ 06A4:04EA 0000 C=DATA   S=_DATA          G=DGROUP  M=FSEEK      ACBP=48
+ 06A4:04EA 0000 C=DATA   S=_DATA          G=DGROUP  M=MEMCPY     ACBP=48
+ 06A4:04EA 0000 C=DATA   S=_DATA          G=DGROUP  M=PRINTF     ACBP=48
+ 06A4:04EA 0001 C=DATA   S=_DATA          G=DGROUP  M=PUTC       ACBP=48
+ 06A4:04EC 0004 C=DATA   S=_DATA          G=DGROUP  M=SETVBUF    ACBP=48
+ 06A4:04F0 0000 C=DATA   S=_DATA          G=DGROUP  M=SPRINTF    ACBP=48
+ 06A4:04F0 0000 C=DATA   S=_DATA          G=DGROUP  M=WRITE      ACBP=48
+ 06A4:04F0 0000 C=DATA   S=_DATA          G=DGROUP  M=WRITEA     ACBP=48
+ 06A4:04F0 0000 C=DATA   S=_DATA          G=DGROUP  M=XFFLUSH    ACBP=48
+ 06A4:04F0 0000 C=DATA   S=_CVTSEG        G=DGROUP  M=c0.ASM     ACBP=48
+ 06A4:04F0 0002 C=DATA   S=_CVTSEG        G=DGROUP  M=CVTFAK     ACBP=48
+ 06A4:04F2 0000 C=DATA   S=_CVTSEG        G=DGROUP  M=REALCVT    ACBP=48
+ 06A4:04F2 0000 C=DATA   S=_SCNSEG        G=DGROUP  M=c0.ASM     ACBP=48
+ 06A4:04F2 0006 C=DATA   S=_SCNSEG        G=DGROUP  M=CVTFAK     ACBP=48
+ 06A4:04F8 0000 C=CONST  S=_CONST         G=DGROUP  M=c0.ASM     ACBP=48
+ 06A4:04F8 0000 C=INITDATA S=_INIT_         G=DGROUP  M=c0.ASM     ACBP=48
+ 06A4:04F8 0006 C=INITDATA S=_INIT_         G=DGROUP  M=SETUPIO    ACBP=48
+ 06A4:04FE 0006 C=INITDATA S=_INIT_         G=DGROUP  M=CRTINIT    ACBP=48
+ 06A4:0504 0000 C=INITDATA S=_INITEND_      G=DGROUP  M=c0.ASM     ACBP=28
+ 06A4:0504 0000 C=EXITDATA S=_EXIT_         G=DGROUP  M=c0.ASM     ACBP=48
+ 06A4:0504 0000 C=EXITDATA S=_EXITEND_      G=DGROUP  M=c0.ASM     ACBP=28
+ 06A4:0504 0000 C=BSS    S=_BSS           G=DGROUP  M=c0.ASM     ACBP=48
+ 06A4:0504 1000 C=BSS    S=_BSS           G=DGROUP  M=test.c     ACBP=48
+ 06A4:1504 0001 C=BSS    S=_BSS           G=DGROUP  M=os_cpu_c.c ACBP=48
+ 06A4:1506 001B C=BSS    S=_BSS           G=DGROUP  M=pc.c       ACBP=48
+ 06A4:1522 1D55 C=BSS    S=_BSS           G=DGROUP  M=ucos_ii.c  ACBP=48
+ 06A4:3278 0080 C=BSS    S=_BSS           G=DGROUP  M=ATEXIT     ACBP=48
+ 06A4:32F8 0000 C=BSS    S=_BSS           G=DGROUP  M=IOERROR    ACBP=48
+ 06A4:32F8 0000 C=BSS    S=_BSS           G=DGROUP  M=ISATTY     ACBP=48
+ 06A4:32F8 0000 C=BSS    S=_BSS           G=DGROUP  M=LONGTOA    ACBP=48
+ 06A4:32F8 0000 C=BSS    S=_BSS           G=DGROUP  M=LSEEK      ACBP=48
+ 06A4:32F8 0000 C=BSS    S=_BSS           G=DGROUP  M=SETUPIO    ACBP=48
+ 06A4:32F8 0000 C=BSS    S=_BSS           G=DGROUP  M=VPRINTER   ACBP=48
+ 06A4:32F8 0000 C=BSS    S=_BSS           G=DGROUP  M=VRAM       ACBP=48
+ 06A4:32F8 0000 C=BSS    S=_BSS           G=DGROUP  M=CRTINIT    ACBP=48
+ 06A4:32F8 0000 C=BSS    S=_BSS           G=DGROUP  M=GETCH      ACBP=48
+ 06A4:32F8 0000 C=BSS    S=_BSS           G=DGROUP  M=KBHIT      ACBP=48
+ 06A4:32F8 0000 C=BSS    S=_BSS           G=DGROUP  M=SETBLOCK   ACBP=48
+ 06A4:32F8 0000 C=BSS    S=_BSS           G=DGROUP  M=SETJMP     ACBP=48
+ 06A4:32F8 0000 C=BSS    S=_BSS           G=DGROUP  M=MEMCPY     ACBP=48
+ 06A4:32F8 0001 C=BSS    S=_BSS           G=DGROUP  M=PUTC       ACBP=48
+ 06A4:32FA 0000 C=BSS    S=_BSS           G=DGROUP  M=WRITEA     ACBP=48
+ 06A4:32FA 0000 C=BSSEND S=_BSSEND        G=DGROUP  M=c0.ASM     ACBP=28
+ 09D4:0000 0080 C=STACK  S=_STACK         G=(none)  M=c0.ASM     ACBP=74
 
   Address         Publics by Name
 
- 06C4:0000 idle  DATASEG@
+ 06A4:0000 idle  DATASEG@
  0000:0291 idle  DGROUP@
  0000:0395 idle  F_LDIV@
  0000:03A4 idle  F_LMOD@
@@ -206,9 +206,9 @@ Detailed map of segments
  0000:027A       _abort
  0000:0295 idle  _atexit
  0000:0D90 idle  _cprintf
- 06C4:04DF       _directvideo
- 0305:0007 idle  _EDF_search
- 06C4:007F       _errno
+ 06A4:04AB       _directvideo
+ 02F5:0009 idle  _EDF_search
+ 06A4:007F       _errno
  0000:031A       _exit
  0000:10B0 idle  _farfree
  0000:11C4 idle  _farmalloc
@@ -227,155 +227,155 @@ Detailed map of segments
  0000:037F       _gettime
  0000:052D       _isatty
  0000:15EC       _kbhit
- 06C4:351B       _lab1_output
- 06C4:3517       _lab1_pos
+ 06A4:30E7       _lab1_output
+ 06A4:30E3       _lab1_pos
  0000:1A5D       _longjmp
  0000:05E0       _lseek
  0251:0089       _main
  0000:11BA       _malloc
  0000:1DAE       _memcpy
  0000:15FE       _movetext
- 06C4:3446 idle  _OSCPUUsage
- 02A2:002C       _OSCtxSw
- 06C4:3512 idle  _OSCtxSwCtr
- 06C4:350E idle  _OSEventFreeList
- 06C4:346E idle  _OSEventTbl
- 0305:0B85 idle  _OSFlagAccept
- 0305:0CB7 idle  _OSFlagCreate
- 0305:0D2F idle  _OSFlagDel
- 06C4:3447 idle  _OSFlagFreeList
- 0305:0E71 idle  _OSFlagPend
- 0305:10CB idle  _OSFlagPost
- 0305:126B idle  _OSFlagQuery
- 06C4:344B idle  _OSFlagTbl
- 06C4:3029 idle  _OSIdleCtr
- 06C4:3442 idle  _OSIdleCtrMax
- 06C4:343E idle  _OSIdleCtrRun
- 0305:0087       _OSInit
- 02B0:0004       _OSInitHookBegin
- 02B0:0005       _OSInitHookEnd
- 02A2:0067       _OSIntCtxSw
- 0305:00BF idle  _OSIntEnter
- 0305:075D       _OSIntExit
- 06C4:303B idle  _OSIntExitY
- 06C4:303C       _OSIntNesting
- 06C4:303A idle  _OSLockNesting
- 06C4:0138 idle  _OSMapTbl
- 0305:14FB idle  _OSMboxAccept
- 0305:1546 idle  _OSMboxCreate
- 0305:15BB idle  _OSMboxDel
- 0305:16D9 idle  _OSMboxPend
- 0305:17DB idle  _OSMboxPost
- 0305:1853 idle  _OSMboxPostOpt
- 0305:18F6 idle  _OSMboxQuery
- 0305:19EA idle  _OSMemCreate
- 06C4:1B16 idle  _OSMemFreeList
- 0305:1B35 idle  _OSMemGet
- 0305:1BB3 idle  _OSMemPut
- 0305:1C23 idle  _OSMemQuery
- 06C4:1A4E idle  _OSMemTbl
- 0305:1D70 idle  _OSMutexAccept
- 0305:1DFB idle  _OSMutexCreate
- 0305:1EE1 idle  _OSMutexDel
- 0305:203B idle  _OSMutexPend
- 0305:2226 idle  _OSMutexPost
- 0305:23AE idle  _OSMutexQuery
- 06C4:3039       _OSPrioCur
- 06C4:3038       _OSPrioHighRdy
- 0305:24C9 idle  _OSQAccept
- 0305:2569 idle  _OSQCreate
- 0305:268C idle  _OSQDel
- 0305:2809 idle  _OSQFlush
- 06C4:1A4A idle  _OSQFreeList
- 0305:2861 idle  _OSQPend
- 0305:29A7 idle  _OSQPost
- 0305:2A6F idle  _OSQPostFront
- 0305:2B31 idle  _OSQPostOpt
- 0305:2C6F idle  _OSQQuery
- 06C4:195A idle  _OSQTbl
- 06C4:3037 idle  _OSRdyGrp
- 06C4:302F idle  _OSRdyTbl
- 06C4:302E       _OSRunning
- 0305:00D2 idle  _OSSchedLock
- 0305:00E8 idle  _OSSchedUnlock
- 0305:2DFA idle  _OSSemAccept
- 0305:2E2C idle  _OSSemCreate
- 0305:2EA0 idle  _OSSemDel
- 0305:2FBE idle  _OSSemPend
- 0305:306E idle  _OSSemPost
- 0305:30C8 idle  _OSSemQuery
- 0305:0115       _OSStart
- 02A2:000E       _OSStartHighRdy
- 0305:0148       _OSStatInit
- 06C4:343D idle  _OSStatRdy
- 0305:31B4 idle  _OSTaskChangePrio
- 0305:3380 idle  _OSTaskCreate
- 0305:3445       _OSTaskCreateExt
- 02B0:0006       _OSTaskCreateHook
- 06C4:302D idle  _OSTaskCtr
- 0305:3541 idle  _OSTaskDel
- 02B0:000B       _OSTaskDelHook
- 0305:3720 idle  _OSTaskDelReq
- 02B0:0010       _OSTaskIdleHook
- 06C4:2C29 idle  _OSTaskIdleStk
- 0305:399E idle  _OSTaskQuery
- 0305:378C idle  _OSTaskResume
- 02B0:0011       _OSTaskStatHook
- 06C4:303D idle  _OSTaskStatStk
- 0305:380B idle  _OSTaskStkChk
- 02B0:0012       _OSTaskStkInit
- 02B0:00F8       _OSTaskStkInit_FPE_x86
- 0305:38F0 idle  _OSTaskSuspend
- 02B0:01D3       _OSTaskSwHook
- 06C4:2C25       _OSTCBCur
- 06C4:2C21 idle  _OSTCBFreeList
- 06C4:2C1D       _OSTCBHighRdy
- 02B0:01D4       _OSTCBInitHook
- 06C4:2C19 idle  _OSTCBList
- 06C4:2B19 idle  _OSTCBPrioTbl
- 06C4:1B1A idle  _OSTCBTbl
- 06C4:1938       _OSTickDOSCtr
- 02A2:0094       _OSTickISR
- 06C4:1956       _OSTime
- 0305:3A0C       _OSTimeDly
- 0305:3A53 idle  _OSTimeDlyHMSM
- 0305:3B42 idle  _OSTimeDlyResume
- 0305:3BBA       _OSTimeGet
- 0305:3BD9       _OSTimeSet
- 0305:0183       _OSTimeTick
- 02B0:01D9       _OSTimeTickHook
- 06C4:0140 idle  _OSUnMapTbl
- 0305:021F idle  _OSVersion
- 0305:0223 idle  _OS_Dummy
- 0305:0224 idle  _OS_EventTaskRdy
- 0305:02EE idle  _OS_EventTaskWait
- 0305:035B idle  _OS_EventTO
- 0305:03AF idle  _OS_EventWaitListInit
- 0305:138D idle  _OS_FlagInit
- 0305:144C idle  _OS_FlagUnlink
- 0305:1CCC idle  _OS_MemInit
- 0305:2DAA idle  _OS_QInit
- 0305:05F5 idle  _OS_Sched
- 0305:08DD idle  _OS_TaskIdle
- 0305:0902 idle  _OS_TaskStat
- 0305:09CE idle  _OS_TCBInit
- 02CD:000A idle  _PC_DispChar
- 02CD:0048 idle  _PC_DispClrCol
- 02CD:008E idle  _PC_DispClrRow
- 02CD:00C7       _PC_DispClrScr
- 02CD:00F8 idle  _PC_DispStr
- 02CD:0147       _PC_DOSReturn
- 02CD:015B       _PC_DOSSaveReturn
- 02CD:01C9       _PC_ElapsedInit
- 02CD:01DD idle  _PC_ElapsedStart
- 02CD:0203 idle  _PC_ElapsedStop
- 02CD:0254 idle  _PC_GetDateTime
- 02CD:02A7       _PC_GetKey
- 02CD:02CE       _PC_SetTickRate
- 06C4:193A idle  _PC_TickISR
- 02CD:031B idle  _PC_VectGet
- 02CD:0352       _PC_VectSet
- 06C4:3516       _prev_print_prio
+ 06A4:3012 idle  _OSCPUUsage
+ 0293:001E       _OSCtxSw
+ 06A4:30DE idle  _OSCtxSwCtr
+ 06A4:30DA idle  _OSEventFreeList
+ 06A4:303A idle  _OSEventTbl
+ 02F5:0A7E idle  _OSFlagAccept
+ 02F5:0BB0 idle  _OSFlagCreate
+ 02F5:0C28 idle  _OSFlagDel
+ 06A4:3013 idle  _OSFlagFreeList
+ 02F5:0D6A idle  _OSFlagPend
+ 02F5:0FC4 idle  _OSFlagPost
+ 02F5:1164 idle  _OSFlagQuery
+ 06A4:3017 idle  _OSFlagTbl
+ 06A4:2BF5 idle  _OSIdleCtr
+ 06A4:300E idle  _OSIdleCtrMax
+ 06A4:300A idle  _OSIdleCtrRun
+ 02F5:0092       _OSInit
+ 02A0:0006       _OSInitHookBegin
+ 02A0:0007       _OSInitHookEnd
+ 0293:0059       _OSIntCtxSw
+ 02F5:00CA idle  _OSIntEnter
+ 02F5:0700       _OSIntExit
+ 06A4:2C07 idle  _OSIntExitY
+ 06A4:2C08       _OSIntNesting
+ 06A4:2C06 idle  _OSLockNesting
+ 06A4:0104 idle  _OSMapTbl
+ 02F5:13F4 idle  _OSMboxAccept
+ 02F5:143F idle  _OSMboxCreate
+ 02F5:14B4 idle  _OSMboxDel
+ 02F5:15D2 idle  _OSMboxPend
+ 02F5:16D4 idle  _OSMboxPost
+ 02F5:174C idle  _OSMboxPostOpt
+ 02F5:17EF idle  _OSMboxQuery
+ 02F5:18E3 idle  _OSMemCreate
+ 06A4:16E2 idle  _OSMemFreeList
+ 02F5:1A2E idle  _OSMemGet
+ 02F5:1AAC idle  _OSMemPut
+ 02F5:1B1C idle  _OSMemQuery
+ 06A4:161A idle  _OSMemTbl
+ 02F5:1C69 idle  _OSMutexAccept
+ 02F5:1CF4 idle  _OSMutexCreate
+ 02F5:1DDA idle  _OSMutexDel
+ 02F5:1F34 idle  _OSMutexPend
+ 02F5:211F idle  _OSMutexPost
+ 02F5:22A7 idle  _OSMutexQuery
+ 06A4:2C05       _OSPrioCur
+ 06A4:2C04       _OSPrioHighRdy
+ 02F5:23C2 idle  _OSQAccept
+ 02F5:2462 idle  _OSQCreate
+ 02F5:2585 idle  _OSQDel
+ 02F5:2702 idle  _OSQFlush
+ 06A4:1616 idle  _OSQFreeList
+ 02F5:275A idle  _OSQPend
+ 02F5:28A0 idle  _OSQPost
+ 02F5:2968 idle  _OSQPostFront
+ 02F5:2A2A idle  _OSQPostOpt
+ 02F5:2B68 idle  _OSQQuery
+ 06A4:1526 idle  _OSQTbl
+ 06A4:2C03 idle  _OSRdyGrp
+ 06A4:2BFB idle  _OSRdyTbl
+ 06A4:2BFA       _OSRunning
+ 02F5:00DD idle  _OSSchedLock
+ 02F5:00F3 idle  _OSSchedUnlock
+ 02F5:2CF3 idle  _OSSemAccept
+ 02F5:2D25 idle  _OSSemCreate
+ 02F5:2D99 idle  _OSSemDel
+ 02F5:2EB7 idle  _OSSemPend
+ 02F5:2F67 idle  _OSSemPost
+ 02F5:2FC1 idle  _OSSemQuery
+ 02F5:0120       _OSStart
+ 0293:0000       _OSStartHighRdy
+ 02F5:017F       _OSStatInit
+ 06A4:3009 idle  _OSStatRdy
+ 02F5:30AD idle  _OSTaskChangePrio
+ 02F5:3279 idle  _OSTaskCreate
+ 02F5:333E       _OSTaskCreateExt
+ 02A0:0008       _OSTaskCreateHook
+ 06A4:2BF9 idle  _OSTaskCtr
+ 02F5:343A       _OSTaskDel
+ 02A0:000D       _OSTaskDelHook
+ 02F5:3619 idle  _OSTaskDelReq
+ 02A0:0012       _OSTaskIdleHook
+ 06A4:27F5 idle  _OSTaskIdleStk
+ 02F5:3897 idle  _OSTaskQuery
+ 02F5:3685 idle  _OSTaskResume
+ 02A0:0013       _OSTaskStatHook
+ 06A4:2C09 idle  _OSTaskStatStk
+ 02F5:3704 idle  _OSTaskStkChk
+ 02A0:0014       _OSTaskStkInit
+ 02A0:00FA       _OSTaskStkInit_FPE_x86
+ 02F5:37E9 idle  _OSTaskSuspend
+ 02A0:01D5       _OSTaskSwHook
+ 06A4:27F1       _OSTCBCur
+ 06A4:27ED idle  _OSTCBFreeList
+ 06A4:27E9       _OSTCBHighRdy
+ 02A0:01D6       _OSTCBInitHook
+ 06A4:27E5 idle  _OSTCBList
+ 06A4:26E5 idle  _OSTCBPrioTbl
+ 06A4:16E6 idle  _OSTCBTbl
+ 06A4:1504       _OSTickDOSCtr
+ 0293:0086       _OSTickISR
+ 06A4:1522 idle  _OSTime
+ 02F5:3905       _OSTimeDly
+ 02F5:394C idle  _OSTimeDlyHMSM
+ 02F5:3A3B idle  _OSTimeDlyResume
+ 02F5:3AB3       _OSTimeGet
+ 02F5:3AD2       _OSTimeSet
+ 02F5:01BA       _OSTimeTick
+ 02A0:01DB       _OSTimeTickHook
+ 06A4:010C idle  _OSUnMapTbl
+ 02F5:0256 idle  _OSVersion
+ 02F5:025A idle  _OS_Dummy
+ 02F5:025B idle  _OS_EventTaskRdy
+ 02F5:0325 idle  _OS_EventTaskWait
+ 02F5:0392 idle  _OS_EventTO
+ 02F5:03E6 idle  _OS_EventWaitListInit
+ 02F5:1286 idle  _OS_FlagInit
+ 02F5:1345 idle  _OS_FlagUnlink
+ 02F5:1BC5 idle  _OS_MemInit
+ 02F5:2CA3 idle  _OS_QInit
+ 02F5:062E idle  _OS_Sched
+ 02F5:07D6 idle  _OS_TaskIdle
+ 02F5:07FB idle  _OS_TaskStat
+ 02F5:08C7 idle  _OS_TCBInit
+ 02BD:000C idle  _PC_DispChar
+ 02BD:004A idle  _PC_DispClrCol
+ 02BD:0090 idle  _PC_DispClrRow
+ 02BD:00C9       _PC_DispClrScr
+ 02BD:00FA idle  _PC_DispStr
+ 02BD:0149       _PC_DOSReturn
+ 02BD:015D       _PC_DOSSaveReturn
+ 02BD:01CB       _PC_ElapsedInit
+ 02BD:01DF idle  _PC_ElapsedStart
+ 02BD:0205 idle  _PC_ElapsedStop
+ 02BD:0256 idle  _PC_GetDateTime
+ 02BD:02A9       _PC_GetKey
+ 02BD:02D0       _PC_SetTickRate
+ 06A4:1506 idle  _PC_TickISR
+ 02BD:031D idle  _PC_VectGet
+ 02BD:0354       _PC_VectSet
+ 06A4:30E2 idle  _prev_print_prio
  0000:1DD2       _printf
  0251:000A idle  _print_buffer
  0000:169B       _putch
@@ -385,97 +385,95 @@ Detailed map of segments
  0000:1A27       _setjmp
  0000:21B5       _setvbuf
  0000:2312       _sprintf
- 0251:0203 idle  _Task1
- 06C4:0D38 idle  _Task1Stk
- 0251:02F3 idle  _Task2
- 06C4:0938 idle  _Task2Stk
- 0251:03E3 idle  _Task3
- 06C4:0538 idle  _Task3Stk
- 06C4:1138 idle  _TaskClkStk
- 0251:049A idle  _TaskPrint
- 0251:0136 idle  _TaskStart
- 06C4:1538 idle  _TaskStartStk
- 06C4:009A idle  _TASK_CNT
- 06C4:0094 idle  _TASK_INFO
- 06C4:0098 idle  _TASK_PRIO
+ 0251:01FA idle  _Task1
+ 06A4:0D04 idle  _Task1Stk
+ 0251:02B1 idle  _Task2
+ 06A4:0904 idle  _Task2Stk
+ 0251:0368 idle  _Task3
+ 06A4:0504 idle  _Task3Stk
+ 0251:0128 idle  _TaskStart
+ 06A4:1104 idle  _TaskStartStk
+ 06A4:009A idle  _TASK_CNT
+ 06A4:0094 idle  _TASK_INFO
+ 06A4:0098 idle  _TASK_PRIO
  0000:1522 idle  _ungetch
  0000:2334 idle  _vsprintf
  0000:1A9B idle  _wherex
  0000:1AAA idle  _wherey
  0000:1000 idle  __AHINCR
  0000:000C idle  __AHSHIFT
- 06C4:0240       __atexitcnt
- 06C4:36AC       __atexittbl
+ 06A4:020C       __atexitcnt
+ 06A4:3278       __atexittbl
  0000:1418       __brk
- 06C4:008B       __brklvl
- 06C4:006B idle  __C0argc
- 06C4:006D idle  __C0argv
+ 06A4:008B       __brklvl
+ 06A4:006B idle  __C0argc
+ 06A4:006D idle  __C0argv
  0000:0E72 idle  __c0crtinit
- 06C4:0071 idle  __C0environ
- 06C4:051D       __cChar
+ 06A4:0071 idle  __C0environ
+ 06A4:04E9       __cChar
  0000:033B idle  __cexit
- 06C4:051C       __cFlag
+ 06A4:04E8       __cFlag
  0000:016A       __checknull
  0000:0157       __cleanup
  0000:0C5E       __CPUTN
  0000:0E8F idle  __crtinit
  0000:0000  Abs  __cvtfak
  0000:0349 idle  __c_exit
- 06C4:0408 idle  __doserrno
+ 06A4:03D4 idle  __doserrno
  0000:051B idle  __DOSERROR
- 06C4:040A idle  __dosErrorToSV
- 06C4:0075 idle  __envLng
- 06C4:0077 idle  __envseg
- 06C4:0079 idle  __envSize
+ 06A4:03D6 idle  __dosErrorToSV
+ 06A4:0075 idle  __envLng
+ 06A4:0077 idle  __envseg
+ 06A4:0079 idle  __envSize
  0000:0329       __exit
- 06C4:0242       __exitbuf
- 06C4:0246 idle  __exitfopen
- 06C4:024A idle  __exitopen
+ 06A4:020E       __exitbuf
+ 06A4:0212 idle  __exitfopen
+ 06A4:0216 idle  __exitopen
  0000:1DED idle  __fputc
  0000:1FB2       __FPUTN
- 06C4:0087       __heapbase
- 06C4:008F       __heaptop
- 06C4:005B idle  __Int0Vector
- 06C4:005F idle  __Int4Vector
- 06C4:0063 idle  __Int5Vector
- 06C4:0067 idle  __Int6Vector
+ 06A4:0087       __heapbase
+ 06A4:008F       __heaptop
+ 06A4:005B idle  __Int0Vector
+ 06A4:005F idle  __Int4Vector
+ 06A4:0063 idle  __Int5Vector
+ 06A4:0067 idle  __Int6Vector
  0000:04E2       __IOERROR
  0000:053E       __LONGTOA
  0000:0293 idle  __MMODEL
- 06C4:03DE       __nfile
+ 06A4:03AA       __nfile
  0000:14FB idle  __Ngetche
  0000:151F idle  __Nungetch
- 06C4:03E0       __openfd
- 06C4:007D idle  __osmajor
- 06C4:007E idle  __osminor
- 06C4:007D idle  __osversion
- 06C4:007B       __psp
+ 06A4:03AC       __openfd
+ 06A4:007D idle  __osmajor
+ 06A4:007E idle  __osminor
+ 06A4:007D idle  __osversion
+ 06A4:007B       __psp
  0000:16B2       __REALCVT
- 06C4:0524       __RealCvtVector
+ 06A4:04F0       __RealCvtVector
  0000:01C0       __restorezero
  0000:1457       __sbrk
- 06C4:0526 idle  __ScanTodVector
+ 06A4:04F2 idle  __ScanTodVector
  0000:17EC       __SCREENIO
  0000:189F       __SCROLL
  0000:062A       __setupio
- 06C4:0081 idle  __StartTime
- 06C4:0464       __stklen
- 06C4:024E       __streams
+ 06A4:0081 idle  __StartTime
+ 06A4:0430       __stklen
+ 06A4:021A       __streams
  0000:016B       __terminate
  0000:0000 idle  __turboCrt
  0000:05C0 idle  __UTOA
  0000:1828       __VALIDATEXY
- 06C4:007D idle  __version
- 06C4:04D0       __video
+ 06A4:007D idle  __version
+ 06A4:049C       __video
  0000:0DE7       __VideoInt
  0000:06FC       __VPRINTER
  0000:0BBF       __VPTR
  0000:0BE4       __VRAM
  0000:1A91       __wherexy
  0000:24A6       __write
- 06C4:04CE       __wscroll
+ 06A4:049A       __wscroll
  0000:24E2       __xfflush
- 06C4:0085 idle  ___brklvl
+ 06A4:0085 idle  ___brklvl
  0000:0F70 idle  ___first
  0000:0F72 idle  ___last
  0000:0F74 idle  ___rover
@@ -592,203 +590,201 @@ Detailed map of segments
  0000:24E2       __xfflush
  0251:000A idle  _print_buffer
  0251:0089       _main
- 0251:0136 idle  _TaskStart
- 0251:0203 idle  _Task1
- 0251:02F3 idle  _Task2
- 0251:03E3 idle  _Task3
- 0251:049A idle  _TaskPrint
- 02A2:000E       _OSStartHighRdy
- 02A2:002C       _OSCtxSw
- 02A2:0067       _OSIntCtxSw
- 02A2:0094       _OSTickISR
- 02B0:0004       _OSInitHookBegin
- 02B0:0005       _OSInitHookEnd
- 02B0:0006       _OSTaskCreateHook
- 02B0:000B       _OSTaskDelHook
- 02B0:0010       _OSTaskIdleHook
- 02B0:0011       _OSTaskStatHook
- 02B0:0012       _OSTaskStkInit
- 02B0:00F8       _OSTaskStkInit_FPE_x86
- 02B0:01D3       _OSTaskSwHook
- 02B0:01D4       _OSTCBInitHook
- 02B0:01D9       _OSTimeTickHook
- 02CD:000A idle  _PC_DispChar
- 02CD:0048 idle  _PC_DispClrCol
- 02CD:008E idle  _PC_DispClrRow
- 02CD:00C7       _PC_DispClrScr
- 02CD:00F8 idle  _PC_DispStr
- 02CD:0147       _PC_DOSReturn
- 02CD:015B       _PC_DOSSaveReturn
- 02CD:01C9       _PC_ElapsedInit
- 02CD:01DD idle  _PC_ElapsedStart
- 02CD:0203 idle  _PC_ElapsedStop
- 02CD:0254 idle  _PC_GetDateTime
- 02CD:02A7       _PC_GetKey
- 02CD:02CE       _PC_SetTickRate
- 02CD:031B idle  _PC_VectGet
- 02CD:0352       _PC_VectSet
- 0305:0007 idle  _EDF_search
- 0305:0087       _OSInit
- 0305:00BF idle  _OSIntEnter
- 0305:00D2 idle  _OSSchedLock
- 0305:00E8 idle  _OSSchedUnlock
- 0305:0115       _OSStart
- 0305:0148       _OSStatInit
- 0305:0183       _OSTimeTick
- 0305:021F idle  _OSVersion
- 0305:0223 idle  _OS_Dummy
- 0305:0224 idle  _OS_EventTaskRdy
- 0305:02EE idle  _OS_EventTaskWait
- 0305:035B idle  _OS_EventTO
- 0305:03AF idle  _OS_EventWaitListInit
- 0305:05F5 idle  _OS_Sched
- 0305:075D       _OSIntExit
- 0305:08DD idle  _OS_TaskIdle
- 0305:0902 idle  _OS_TaskStat
- 0305:09CE idle  _OS_TCBInit
- 0305:0B85 idle  _OSFlagAccept
- 0305:0CB7 idle  _OSFlagCreate
- 0305:0D2F idle  _OSFlagDel
- 0305:0E71 idle  _OSFlagPend
- 0305:10CB idle  _OSFlagPost
- 0305:126B idle  _OSFlagQuery
- 0305:138D idle  _OS_FlagInit
- 0305:144C idle  _OS_FlagUnlink
- 0305:14FB idle  _OSMboxAccept
- 0305:1546 idle  _OSMboxCreate
- 0305:15BB idle  _OSMboxDel
- 0305:16D9 idle  _OSMboxPend
- 0305:17DB idle  _OSMboxPost
- 0305:1853 idle  _OSMboxPostOpt
- 0305:18F6 idle  _OSMboxQuery
- 0305:19EA idle  _OSMemCreate
- 0305:1B35 idle  _OSMemGet
- 0305:1BB3 idle  _OSMemPut
- 0305:1C23 idle  _OSMemQuery
- 0305:1CCC idle  _OS_MemInit
- 0305:1D70 idle  _OSMutexAccept
- 0305:1DFB idle  _OSMutexCreate
- 0305:1EE1 idle  _OSMutexDel
- 0305:203B idle  _OSMutexPend
- 0305:2226 idle  _OSMutexPost
- 0305:23AE idle  _OSMutexQuery
- 0305:24C9 idle  _OSQAccept
- 0305:2569 idle  _OSQCreate
- 0305:268C idle  _OSQDel
- 0305:2809 idle  _OSQFlush
- 0305:2861 idle  _OSQPend
- 0305:29A7 idle  _OSQPost
- 0305:2A6F idle  _OSQPostFront
- 0305:2B31 idle  _OSQPostOpt
- 0305:2C6F idle  _OSQQuery
- 0305:2DAA idle  _OS_QInit
- 0305:2DFA idle  _OSSemAccept
- 0305:2E2C idle  _OSSemCreate
- 0305:2EA0 idle  _OSSemDel
- 0305:2FBE idle  _OSSemPend
- 0305:306E idle  _OSSemPost
- 0305:30C8 idle  _OSSemQuery
- 0305:31B4 idle  _OSTaskChangePrio
- 0305:3380 idle  _OSTaskCreate
- 0305:3445       _OSTaskCreateExt
- 0305:3541 idle  _OSTaskDel
- 0305:3720 idle  _OSTaskDelReq
- 0305:378C idle  _OSTaskResume
- 0305:380B idle  _OSTaskStkChk
- 0305:38F0 idle  _OSTaskSuspend
- 0305:399E idle  _OSTaskQuery
- 0305:3A0C       _OSTimeDly
- 0305:3A53 idle  _OSTimeDlyHMSM
- 0305:3B42 idle  _OSTimeDlyResume
- 0305:3BBA       _OSTimeGet
- 0305:3BD9       _OSTimeSet
- 06C4:0000 idle  DATASEG@
- 06C4:005B idle  __Int0Vector
- 06C4:005F idle  __Int4Vector
- 06C4:0063 idle  __Int5Vector
- 06C4:0067 idle  __Int6Vector
- 06C4:006B idle  __C0argc
- 06C4:006D idle  __C0argv
- 06C4:0071 idle  __C0environ
- 06C4:0075 idle  __envLng
- 06C4:0077 idle  __envseg
- 06C4:0079 idle  __envSize
- 06C4:007B       __psp
- 06C4:007D idle  __osversion
- 06C4:007D idle  __osmajor
- 06C4:007D idle  __version
- 06C4:007E idle  __osminor
- 06C4:007F       _errno
- 06C4:0081 idle  __StartTime
- 06C4:0085 idle  ___brklvl
- 06C4:0087       __heapbase
- 06C4:008B       __brklvl
- 06C4:008F       __heaptop
- 06C4:0094 idle  _TASK_INFO
- 06C4:0098 idle  _TASK_PRIO
- 06C4:009A idle  _TASK_CNT
- 06C4:0138 idle  _OSMapTbl
- 06C4:0140 idle  _OSUnMapTbl
- 06C4:0240       __atexitcnt
- 06C4:0242       __exitbuf
- 06C4:0246 idle  __exitfopen
- 06C4:024A idle  __exitopen
- 06C4:024E       __streams
- 06C4:03DE       __nfile
- 06C4:03E0       __openfd
- 06C4:0408 idle  __doserrno
- 06C4:040A idle  __dosErrorToSV
- 06C4:0464       __stklen
- 06C4:04CE       __wscroll
- 06C4:04D0       __video
- 06C4:04DF       _directvideo
- 06C4:051C       __cFlag
- 06C4:051D       __cChar
- 06C4:0524       __RealCvtVector
- 06C4:0526 idle  __ScanTodVector
- 06C4:0538 idle  _Task3Stk
- 06C4:0938 idle  _Task2Stk
- 06C4:0D38 idle  _Task1Stk
- 06C4:1138 idle  _TaskClkStk
- 06C4:1538 idle  _TaskStartStk
- 06C4:1938       _OSTickDOSCtr
- 06C4:193A idle  _PC_TickISR
- 06C4:1956       _OSTime
- 06C4:195A idle  _OSQTbl
- 06C4:1A4A idle  _OSQFreeList
- 06C4:1A4E idle  _OSMemTbl
- 06C4:1B16 idle  _OSMemFreeList
- 06C4:1B1A idle  _OSTCBTbl
- 06C4:2B19 idle  _OSTCBPrioTbl
- 06C4:2C19 idle  _OSTCBList
- 06C4:2C1D       _OSTCBHighRdy
- 06C4:2C21 idle  _OSTCBFreeList
- 06C4:2C25       _OSTCBCur
- 06C4:2C29 idle  _OSTaskIdleStk
- 06C4:3029 idle  _OSIdleCtr
- 06C4:302D idle  _OSTaskCtr
- 06C4:302E       _OSRunning
- 06C4:302F idle  _OSRdyTbl
- 06C4:3037 idle  _OSRdyGrp
- 06C4:3038       _OSPrioHighRdy
- 06C4:3039       _OSPrioCur
- 06C4:303A idle  _OSLockNesting
- 06C4:303B idle  _OSIntExitY
- 06C4:303C       _OSIntNesting
- 06C4:303D idle  _OSTaskStatStk
- 06C4:343D idle  _OSStatRdy
- 06C4:343E idle  _OSIdleCtrRun
- 06C4:3442 idle  _OSIdleCtrMax
- 06C4:3446 idle  _OSCPUUsage
- 06C4:3447 idle  _OSFlagFreeList
- 06C4:344B idle  _OSFlagTbl
- 06C4:346E idle  _OSEventTbl
- 06C4:350E idle  _OSEventFreeList
- 06C4:3512 idle  _OSCtxSwCtr
- 06C4:3516       _prev_print_prio
- 06C4:3517       _lab1_pos
- 06C4:351B       _lab1_output
- 06C4:36AC       __atexittbl
+ 0251:0128 idle  _TaskStart
+ 0251:01FA idle  _Task1
+ 0251:02B1 idle  _Task2
+ 0251:0368 idle  _Task3
+ 0293:0000       _OSStartHighRdy
+ 0293:001E       _OSCtxSw
+ 0293:0059       _OSIntCtxSw
+ 0293:0086       _OSTickISR
+ 02A0:0006       _OSInitHookBegin
+ 02A0:0007       _OSInitHookEnd
+ 02A0:0008       _OSTaskCreateHook
+ 02A0:000D       _OSTaskDelHook
+ 02A0:0012       _OSTaskIdleHook
+ 02A0:0013       _OSTaskStatHook
+ 02A0:0014       _OSTaskStkInit
+ 02A0:00FA       _OSTaskStkInit_FPE_x86
+ 02A0:01D5       _OSTaskSwHook
+ 02A0:01D6       _OSTCBInitHook
+ 02A0:01DB       _OSTimeTickHook
+ 02BD:000C idle  _PC_DispChar
+ 02BD:004A idle  _PC_DispClrCol
+ 02BD:0090 idle  _PC_DispClrRow
+ 02BD:00C9       _PC_DispClrScr
+ 02BD:00FA idle  _PC_DispStr
+ 02BD:0149       _PC_DOSReturn
+ 02BD:015D       _PC_DOSSaveReturn
+ 02BD:01CB       _PC_ElapsedInit
+ 02BD:01DF idle  _PC_ElapsedStart
+ 02BD:0205 idle  _PC_ElapsedStop
+ 02BD:0256 idle  _PC_GetDateTime
+ 02BD:02A9       _PC_GetKey
+ 02BD:02D0       _PC_SetTickRate
+ 02BD:031D idle  _PC_VectGet
+ 02BD:0354       _PC_VectSet
+ 02F5:0009 idle  _EDF_search
+ 02F5:0092       _OSInit
+ 02F5:00CA idle  _OSIntEnter
+ 02F5:00DD idle  _OSSchedLock
+ 02F5:00F3 idle  _OSSchedUnlock
+ 02F5:0120       _OSStart
+ 02F5:017F       _OSStatInit
+ 02F5:01BA       _OSTimeTick
+ 02F5:0256 idle  _OSVersion
+ 02F5:025A idle  _OS_Dummy
+ 02F5:025B idle  _OS_EventTaskRdy
+ 02F5:0325 idle  _OS_EventTaskWait
+ 02F5:0392 idle  _OS_EventTO
+ 02F5:03E6 idle  _OS_EventWaitListInit
+ 02F5:062E idle  _OS_Sched
+ 02F5:0700       _OSIntExit
+ 02F5:07D6 idle  _OS_TaskIdle
+ 02F5:07FB idle  _OS_TaskStat
+ 02F5:08C7 idle  _OS_TCBInit
+ 02F5:0A7E idle  _OSFlagAccept
+ 02F5:0BB0 idle  _OSFlagCreate
+ 02F5:0C28 idle  _OSFlagDel
+ 02F5:0D6A idle  _OSFlagPend
+ 02F5:0FC4 idle  _OSFlagPost
+ 02F5:1164 idle  _OSFlagQuery
+ 02F5:1286 idle  _OS_FlagInit
+ 02F5:1345 idle  _OS_FlagUnlink
+ 02F5:13F4 idle  _OSMboxAccept
+ 02F5:143F idle  _OSMboxCreate
+ 02F5:14B4 idle  _OSMboxDel
+ 02F5:15D2 idle  _OSMboxPend
+ 02F5:16D4 idle  _OSMboxPost
+ 02F5:174C idle  _OSMboxPostOpt
+ 02F5:17EF idle  _OSMboxQuery
+ 02F5:18E3 idle  _OSMemCreate
+ 02F5:1A2E idle  _OSMemGet
+ 02F5:1AAC idle  _OSMemPut
+ 02F5:1B1C idle  _OSMemQuery
+ 02F5:1BC5 idle  _OS_MemInit
+ 02F5:1C69 idle  _OSMutexAccept
+ 02F5:1CF4 idle  _OSMutexCreate
+ 02F5:1DDA idle  _OSMutexDel
+ 02F5:1F34 idle  _OSMutexPend
+ 02F5:211F idle  _OSMutexPost
+ 02F5:22A7 idle  _OSMutexQuery
+ 02F5:23C2 idle  _OSQAccept
+ 02F5:2462 idle  _OSQCreate
+ 02F5:2585 idle  _OSQDel
+ 02F5:2702 idle  _OSQFlush
+ 02F5:275A idle  _OSQPend
+ 02F5:28A0 idle  _OSQPost
+ 02F5:2968 idle  _OSQPostFront
+ 02F5:2A2A idle  _OSQPostOpt
+ 02F5:2B68 idle  _OSQQuery
+ 02F5:2CA3 idle  _OS_QInit
+ 02F5:2CF3 idle  _OSSemAccept
+ 02F5:2D25 idle  _OSSemCreate
+ 02F5:2D99 idle  _OSSemDel
+ 02F5:2EB7 idle  _OSSemPend
+ 02F5:2F67 idle  _OSSemPost
+ 02F5:2FC1 idle  _OSSemQuery
+ 02F5:30AD idle  _OSTaskChangePrio
+ 02F5:3279 idle  _OSTaskCreate
+ 02F5:333E       _OSTaskCreateExt
+ 02F5:343A       _OSTaskDel
+ 02F5:3619 idle  _OSTaskDelReq
+ 02F5:3685 idle  _OSTaskResume
+ 02F5:3704 idle  _OSTaskStkChk
+ 02F5:37E9 idle  _OSTaskSuspend
+ 02F5:3897 idle  _OSTaskQuery
+ 02F5:3905       _OSTimeDly
+ 02F5:394C idle  _OSTimeDlyHMSM
+ 02F5:3A3B idle  _OSTimeDlyResume
+ 02F5:3AB3       _OSTimeGet
+ 02F5:3AD2       _OSTimeSet
+ 06A4:0000 idle  DATASEG@
+ 06A4:005B idle  __Int0Vector
+ 06A4:005F idle  __Int4Vector
+ 06A4:0063 idle  __Int5Vector
+ 06A4:0067 idle  __Int6Vector
+ 06A4:006B idle  __C0argc
+ 06A4:006D idle  __C0argv
+ 06A4:0071 idle  __C0environ
+ 06A4:0075 idle  __envLng
+ 06A4:0077 idle  __envseg
+ 06A4:0079 idle  __envSize
+ 06A4:007B       __psp
+ 06A4:007D idle  __osversion
+ 06A4:007D idle  __osmajor
+ 06A4:007D idle  __version
+ 06A4:007E idle  __osminor
+ 06A4:007F       _errno
+ 06A4:0081 idle  __StartTime
+ 06A4:0085 idle  ___brklvl
+ 06A4:0087       __heapbase
+ 06A4:008B       __brklvl
+ 06A4:008F       __heaptop
+ 06A4:0094 idle  _TASK_INFO
+ 06A4:0098 idle  _TASK_PRIO
+ 06A4:009A idle  _TASK_CNT
+ 06A4:0104 idle  _OSMapTbl
+ 06A4:010C idle  _OSUnMapTbl
+ 06A4:020C       __atexitcnt
+ 06A4:020E       __exitbuf
+ 06A4:0212 idle  __exitfopen
+ 06A4:0216 idle  __exitopen
+ 06A4:021A       __streams
+ 06A4:03AA       __nfile
+ 06A4:03AC       __openfd
+ 06A4:03D4 idle  __doserrno
+ 06A4:03D6 idle  __dosErrorToSV
+ 06A4:0430       __stklen
+ 06A4:049A       __wscroll
+ 06A4:049C       __video
+ 06A4:04AB       _directvideo
+ 06A4:04E8       __cFlag
+ 06A4:04E9       __cChar
+ 06A4:04F0       __RealCvtVector
+ 06A4:04F2 idle  __ScanTodVector
+ 06A4:0504 idle  _Task3Stk
+ 06A4:0904 idle  _Task2Stk
+ 06A4:0D04 idle  _Task1Stk
+ 06A4:1104 idle  _TaskStartStk
+ 06A4:1504       _OSTickDOSCtr
+ 06A4:1506 idle  _PC_TickISR
+ 06A4:1522 idle  _OSTime
+ 06A4:1526 idle  _OSQTbl
+ 06A4:1616 idle  _OSQFreeList
+ 06A4:161A idle  _OSMemTbl
+ 06A4:16E2 idle  _OSMemFreeList
+ 06A4:16E6 idle  _OSTCBTbl
+ 06A4:26E5 idle  _OSTCBPrioTbl
+ 06A4:27E5 idle  _OSTCBList
+ 06A4:27E9       _OSTCBHighRdy
+ 06A4:27ED idle  _OSTCBFreeList
+ 06A4:27F1       _OSTCBCur
+ 06A4:27F5 idle  _OSTaskIdleStk
+ 06A4:2BF5 idle  _OSIdleCtr
+ 06A4:2BF9 idle  _OSTaskCtr
+ 06A4:2BFA       _OSRunning
+ 06A4:2BFB idle  _OSRdyTbl
+ 06A4:2C03 idle  _OSRdyGrp
+ 06A4:2C04       _OSPrioHighRdy
+ 06A4:2C05       _OSPrioCur
+ 06A4:2C06 idle  _OSLockNesting
+ 06A4:2C07 idle  _OSIntExitY
+ 06A4:2C08       _OSIntNesting
+ 06A4:2C09 idle  _OSTaskStatStk
+ 06A4:3009 idle  _OSStatRdy
+ 06A4:300A idle  _OSIdleCtrRun
+ 06A4:300E idle  _OSIdleCtrMax
+ 06A4:3012 idle  _OSCPUUsage
+ 06A4:3013 idle  _OSFlagFreeList
+ 06A4:3017 idle  _OSFlagTbl
+ 06A4:303A idle  _OSEventTbl
+ 06A4:30DA idle  _OSEventFreeList
+ 06A4:30DE idle  _OSCtxSwCtr
+ 06A4:30E2 idle  _prev_print_prio
+ 06A4:30E3       _lab1_pos
+ 06A4:30E7       _lab1_output
+ 06A4:3278       __atexittbl
 
 Program entry point at 0000:0000
 
