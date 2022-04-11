@@ -87,14 +87,14 @@ INT8U EDF_search(void){
     OS_TCB    *ptcb;
     ptcb = OSTCBList;    
     
-    if (OSRunning == TRUE && (unsigned int)ptcb->OSTCBPrio < 10) {    
+    if (OSRunning == TRUE) {    
         //printf("cur prio: %5ld, %ld\n", (INT32U)OSTCBCur->OSTCBPrio,OSTCBCur->next_ddl);
         while (ptcb != (OS_TCB *)0) {          /* Go through all TCBs in TCB list          */
             //printf("cur prio %u\n", (unsigned int)ptcb->OSTCBPrio);
             OS_ENTER_CRITICAL();
             //printf("-  %ld\n", cur_min_ddl);
-            if (!ptcb->OSTCBDly){        
-                if(ptcb->next_ddl < cur_min_ddl){         
+            if (!ptcb->OSTCBDly && (ptcb->OSTCBPrio == 0 || ptcb->OSTCBPrio == 1 || ptcb->OSTCBPrio == 2 || ptcb->OSTCBPrio == 3)){        
+                if(ptcb->next_ddl <= cur_min_ddl && (ptcb->OSTCBPrio < target)){         
                     cur_min_ddl = ptcb->next_ddl;
                     target = ptcb->OSTCBPrio;
                 }
@@ -732,7 +732,7 @@ static  void  OS_InitTaskIdle (void)
                           (void *)0,                                 /* No TCB extension                     */
                           OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR,
                           0,
-                          100000); /* give idle task large ddl to prevent occupying EDF */
+                          99999); /* give idle task large ddl to prevent occupying EDF */
     #else
     (void)OSTaskCreateExt(OS_TaskIdle,
                           (void *)0,                                 /* No arguments passed to OS_TaskIdle() */
@@ -744,7 +744,7 @@ static  void  OS_InitTaskIdle (void)
                           (void *)0,                                 /* No TCB extension                     */
                           OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR,
                           0,
-                          100000); /* give idle task large ddl to prevent occupying EDF */
+                          99999); /* give idle task large ddl to prevent occupying EDF */
     #endif
 #else
     #if OS_STK_GROWTH == 1
@@ -895,8 +895,10 @@ void  OS_Sched (void)
             lab1_output[lab1_pos][1] = COMPLETE;
             lab1_output[lab1_pos][2] = (INT32U)OSPrioCur;
             lab1_output[lab1_pos][3] = OSPrioHighRdy;
-            lab1_pos = (lab1_pos + 1)% OUTPUT_ROW_N;
+            
             OSTCBHighRdy = OSTCBPrioTbl[OSPrioHighRdy];
+            lab1_output[lab1_pos][4] = OSTCBHighRdy->next_ddl;
+            lab1_pos = (lab1_pos + 1)% OUTPUT_ROW_N;
             OSCtxSwCtr++;                              /* Increment context switch counter             */
             OS_TASK_SW();                              /* Perform a context switch                     */
         }
@@ -947,8 +949,10 @@ void  OSIntExit (void)
                 lab1_output[lab1_pos][1] = PREEMPT;
                 lab1_output[lab1_pos][2] = (INT32U)OSPrioCur;
                 lab1_output[lab1_pos][3] = OSPrioHighRdy;
-                lab1_pos = (lab1_pos + 1)% OUTPUT_ROW_N;
+                
                 OSTCBHighRdy  = OSTCBPrioTbl[OSPrioHighRdy];
+                lab1_output[lab1_pos][4] = OSTCBHighRdy->next_ddl;
+                lab1_pos = (lab1_pos + 1)% OUTPUT_ROW_N;
                 OSCtxSwCtr++;                              /* Keep track of the number of ctx switches */
                 OSIntCtxSw();                              /* Perform interrupt level ctx switch       */
             }
@@ -1131,7 +1135,7 @@ INT8U  OS_TCBInit (INT8U prio, OS_STK *ptos, OS_STK *pbos, INT16U id, INT32U stk
         ptcb->OSTCBId        = id;                         /* Store task ID                            */
         ptcb->compTime       = c;                          /* Lab1 simulate RM task                    */
         ptcb->period         = p;                          /* Lab1 simulate RM task                    */
-        ptcb->next_ddl       = p;                          /* Lab2 EDF next deadline                   */
+        ptcb->next_ddl       = p+1;                          /* Lab2 EDF next deadline                   */
 #else
         pext                 = pext;                       /* Prevent compiler warning if not used     */
         stk_size             = stk_size;

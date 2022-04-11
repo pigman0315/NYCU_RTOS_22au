@@ -45,7 +45,7 @@
 #define OS_TASK_STAT_EN           1    /* Enable (1) or Disable(0) the statistics task                 */
 #define OS_TASK_STAT_STK_SIZE   512    /* Statistics task stack size (# of OS_STK wide entries)        */
 
-#define OS_TICKS_PER_SEC        200    /* Set the number of ticks in one second                        */
+#define OS_TICKS_PER_SEC        50    /* Set the number of ticks in one second                        */
 
 
                                        /* ----------------------- EVENT FLAGS ------------------------ */

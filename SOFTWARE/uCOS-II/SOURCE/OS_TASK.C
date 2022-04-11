@@ -306,7 +306,7 @@ INT8U  OSTaskCreateExt (void   (*task)(void *pd),
             OSTaskCtr++;                                       /* Increment the #tasks counter         */
             OS_EXIT_CRITICAL();
             if (OSRunning == TRUE) {                           /* Find HPT if multitasking has started */
-                OS_Sched();
+                //OS_Sched();
             }
         } else {
             OS_ENTER_CRITICAL();

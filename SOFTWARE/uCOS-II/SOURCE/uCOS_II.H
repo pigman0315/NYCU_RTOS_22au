@@ -424,7 +424,7 @@ typedef struct os_tcb {
 #define COMPLETE 0
 #define OUTPUT_ROW_N 25
 
-OS_EXT INT32U lab1_output[OUTPUT_ROW_N][4];
+OS_EXT INT32U lab1_output[OUTPUT_ROW_N][5];
 OS_EXT INT32U lab1_pos;
 OS_EXT INT8U prev_print_prio;
 

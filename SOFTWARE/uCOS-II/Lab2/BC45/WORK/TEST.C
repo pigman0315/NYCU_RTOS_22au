@@ -27,7 +27,7 @@
 
 
 #define          TASK_START_PRIO    0
-#define          TASK_NUM            2
+
 
 
 
@@ -39,10 +39,19 @@
 OS_STK        TaskStartStk[TASK_STK_SIZE];
 OS_STK        Task1Stk[TASK_STK_SIZE];                /* Task #1    task stack                         */
 OS_STK        Task2Stk[TASK_STK_SIZE];                /* Task #2    task stack                         */
-OS_STK        Task3Stk[TASK_STK_SIZE];                /* Task #3    task stack                         */
-INT8U         TASK_INFO[TASK_NUM][2] = {{1,3},{3,5}};
-INT8U         TASK_PRIO[TASK_NUM] = {1, 2};
-INT32U        TASK_CNT[TASK_NUM] = {0, 0};
+OS_STK        Task3Stk[TASK_STK_SIZE];                /* Task #3    task stack     */       
+
+
+#define          TASK_NUM            3           
+INT8U         TASK_INFO[TASK_NUM][2] = {{1,4},{2,5},{2,10}};
+INT8U         TASK_PRIO[TASK_NUM] = {1, 2, 3};
+INT32U        TASK_CNT[TASK_NUM] = {0, 0, 0};
+
+
+// #define          TASK_NUM            2          
+// INT8U         TASK_INFO[TASK_NUM][2] = {{1,3},{3,5}};
+// INT8U         TASK_PRIO[TASK_NUM] = {1, 2};
+// INT32U        TASK_CNT[TASK_NUM] = {0, 0};
 
 /*
 *********************************************************************************************************
@@ -62,10 +71,10 @@ void print_buffer(void)
     INT16U i;
     for(i = 0;i < lab1_pos;i++){
         if(lab1_output[i][1] == COMPLETE){
-            printf("%8ld    complete   %5ld    %5ld\n",lab1_output[i][0],lab1_output[i][2],lab1_output[i][3]);
+            printf("%8ld    complete   %5ld    %5ld %5ld\n",lab1_output[i][0],lab1_output[i][2],lab1_output[i][3], lab1_output[i][4]);
         }
         else{
-            printf("%8ld    preempt    %5ld    %5ld\n",lab1_output[i][0],lab1_output[i][2],lab1_output[i][3]);
+            printf("%8ld    preempt    %5ld    %5ld %5ld\n",lab1_output[i][0],lab1_output[i][2],lab1_output[i][3], lab1_output[i][4]);
         }
     }
     lab1_pos = 0;
@@ -107,7 +116,7 @@ void main (void)
                    (void *)0,
                    OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR,
                    2,
-                   100000);
+                   99998);
 
     OSStart();                                             /* Start multitasking                       */
 }
@@ -169,17 +178,17 @@ static  void  TaskStartCreateTasks (void)
                    TASK_INFO[1][0],
                    TASK_INFO[1][1]);
 
-    // OSTaskCreateExt(Task3,
-    //                (void *)0,
-    //                &Task3Stk[TASK_STK_SIZE - 1],
-    //                TASK_PRIO[2],
-    //                TASK_3_ID,
-    //                &Task3Stk[0],
-    //                TASK_STK_SIZE,
-    //                (void *)0,
-    //                OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR,
-    //                TASK_INFO[2][0],
-    //                TASK_INFO[2][1]);
+    OSTaskCreateExt(Task3,
+                   (void *)0,
+                   &Task3Stk[TASK_STK_SIZE - 1],
+                   TASK_PRIO[2],
+                   TASK_3_ID,
+                   &Task3Stk[0],
+                   TASK_STK_SIZE,
+                   (void *)0,
+                   OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR,
+                   TASK_INFO[2][0],
+                   TASK_INFO[2][1]);
 }
 
 void  Task1 (void *pdata)
@@ -188,7 +197,7 @@ void  Task1 (void *pdata)
     int end;
     int toDelay;
     INT16S  key;
-    start = OSTimeGet();
+    start = 1;//OSTimeGet();
     pdata = pdata;
     
     while(1){
@@ -222,7 +231,7 @@ void  Task2 (void *pdata)
     int end;
     int toDelay;
     INT16S  key;
-    start = OSTimeGet();
+    start = 1;//OSTimeGet();
     pdata = pdata;
     while(1){
         while(OSTCBCur->compTime > 0){
@@ -254,7 +263,7 @@ void  Task3 (void *pdata)
     int end;
     int toDelay;
     INT16S  key;
-    start = OSTimeGet();
+    start = 1;//OSTimeGet();
     pdata = pdata;
     while(1){
         while(OSTCBCur->compTime > 0){
