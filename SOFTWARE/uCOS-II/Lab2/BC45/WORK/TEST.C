@@ -71,10 +71,10 @@ void print_buffer(void)
     INT16U i;
     for(i = 0;i < lab1_pos;i++){
         if(lab1_output[i][1] == COMPLETE){
-            printf("%8ld    complete   %5ld    %5ld %5ld\n",lab1_output[i][0],lab1_output[i][2],lab1_output[i][3], lab1_output[i][4]);
+            printf("%8ld    complete   %5ld    %5ld\n",lab1_output[i][0],lab1_output[i][2],lab1_output[i][3]);
         }
         else{
-            printf("%8ld    preempt    %5ld    %5ld %5ld\n",lab1_output[i][0],lab1_output[i][2],lab1_output[i][3], lab1_output[i][4]);
+            printf("%8ld    preempt    %5ld    %5ld\n",lab1_output[i][0],lab1_output[i][2],lab1_output[i][3]);
         }
     }
     lab1_pos = 0;
