@@ -150,73 +150,7 @@ void  OSIntEnter (void)
     }
 }
 /*$PAGE*/
-/*
-*********************************************************************************************************
-*                                               EXIT ISR
-*
-* Description: This function is used to notify uC/OS-II that you have completed serviving an ISR.  When
-*              the last nested ISR has completed, uC/OS-II will call the scheduler to determine whether
-*              a new, high-priority task, is ready to run.
-*
-* Arguments  : none
-*
-* Returns    : none
-*
-* Notes      : 1) You MUST invoke OSIntEnter() and OSIntExit() in pair.  In other words, for every call
-*                 to OSIntEnter() at the beginning of the ISR you MUST have a call to OSIntExit() at the
-*                 end of the ISR.
-*              2) Rescheduling is prevented when the scheduler is locked (see OS_SchedLock())
-*********************************************************************************************************
-*/
 
-void  OSIntExit (void)
-{
-#if OS_CRITICAL_METHOD == 3                                /* Allocate storage for CPU status register */
-    OS_CPU_SR  cpu_sr;
-#endif
-    
-    
-    if (OSRunning == TRUE) {
-        OS_ENTER_CRITICAL();
-        if (OSIntNesting > 0) {                            /* Prevent OSIntNesting from wrapping       */
-            OSIntNesting--;
-        }
-        if ((OSIntNesting == 0) && (OSLockNesting == 0)) { /* Reschedule only if all ISRs complete ... */
-            OSIntExitY    = OSUnMapTbl[OSRdyGrp];          /* ... and not locked.                      */
-            OSPrioHighRdy = (INT8U)((OSIntExitY << 3) + OSUnMapTbl[OSRdyTbl[OSIntExitY]]);
-            if (OSPrioHighRdy != OSPrioCur) {              /* No Ctx Sw if current task is highest rdy */
-                if(OSPrioHighRdy != 1 && OSPrioCur != 1){
-                    //sprintf(lab1_output+strlen(lab1_output),"%8ld    preempt %5d  %5d\n", (INT32U)OSTime,OSPrioCur, OSPrioHighRdy);
-                    
-                    lab1_output[lab1_pos][0] = OSTimeGet();
-                    lab1_output[lab1_pos][1] = PREEMPT;
-                    lab1_output[lab1_pos][2] = (INT32U)OSPrioCur;
-                    lab1_output[lab1_pos][3] = OSPrioHighRdy;
-                    lab1_pos = (lab1_pos + 1)% OUTPUT_ROW_N;
-                }
-                else if(OSPrioHighRdy == 1){
-                    prev_print_prio = OSPrioCur;
-                }
-                else if(OSPrioCur == 1){
-                    if(prev_print_prio != OSPrioHighRdy){
-                        //sprintf(lab1_output+strlen(lab1_output),"%8ld    preempt %5d  %5d\n", (INT32U)OSTime,prev_print_prio, OSPrioHighRdy);
-                        lab1_output[lab1_pos][0] = OSTimeGet();
-                        lab1_output[lab1_pos][1] = PREEMPT;
-                        lab1_output[lab1_pos][2] = (INT32U)prev_print_prio;
-                        lab1_output[lab1_pos][3] = OSPrioHighRdy;
-                        lab1_pos = (lab1_pos + 1)% OUTPUT_ROW_N;
-                    }
-                    prev_print_prio = -1;
-                }
-                OSTCBHighRdy  = OSTCBPrioTbl[OSPrioHighRdy];
-                OSCtxSwCtr++;                              /* Keep track of the number of ctx switches */
-                OSIntCtxSw();                              /* Perform interrupt level ctx switch       */
-            }
-        }
-        OS_EXIT_CRITICAL();
-    }
-}
-/*$PAGE*/
 /*
 *********************************************************************************************************
 *                                          PREVENT SCHEDULING
@@ -816,7 +750,7 @@ static  void  OS_InitTaskStat (void)
                           (void *)0,                                   /* No TCB extension               */
                           OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR,
                           0,
-                          0);  /* Enable stack checking + clear  */
+                          99999);  /* Enable stack checking + clear  */
     #else
     (void)OSTaskCreateExt(OS_TaskStat,
                           (void *)0,                                   /* No args passed to OS_TaskStat()*/
@@ -828,7 +762,7 @@ static  void  OS_InitTaskStat (void)
                           (void *)0,                                   /* No TCB extension               */
                           OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR,
                           0,
-                          0);  /* Enable stack checking + clear  */
+                          99999);  /* Enable stack checking + clear  */
     #endif
 #else
     #if OS_STK_GROWTH == 1
@@ -883,6 +817,56 @@ static  void  OS_InitTCBList (void)
 /*$PAGE*/
 /*
 *********************************************************************************************************
+*                                               EXIT ISR
+*
+* Description: This function is used to notify uC/OS-II that you have completed serviving an ISR.  When
+*              the last nested ISR has completed, uC/OS-II will call the scheduler to determine whether
+*              a new, high-priority task, is ready to run.
+*
+* Arguments  : none
+*
+* Returns    : none
+*
+* Notes      : 1) You MUST invoke OSIntEnter() and OSIntExit() in pair.  In other words, for every call
+*                 to OSIntEnter() at the beginning of the ISR you MUST have a call to OSIntExit() at the
+*                 end of the ISR.
+*              2) Rescheduling is prevented when the scheduler is locked (see OS_SchedLock())
+*********************************************************************************************************
+*/
+
+void  OSIntExit (void)
+{
+#if OS_CRITICAL_METHOD == 3                                /* Allocate storage for CPU status register */
+    OS_CPU_SR  cpu_sr;
+#endif
+    
+    
+    if (OSRunning == TRUE) {
+        OS_ENTER_CRITICAL();
+        if (OSIntNesting > 0) {                            /* Prevent OSIntNesting from wrapping       */
+            OSIntNesting--;
+        }
+        if ((OSIntNesting == 0) && (OSLockNesting == 0)) { /* Reschedule only if all ISRs complete ... */
+            OSIntExitY    = OSUnMapTbl[OSRdyGrp];          /* ... and not locked.                      */
+            OSPrioHighRdy = (INT8U)((OSIntExitY << 3) + OSUnMapTbl[OSRdyTbl[OSIntExitY]]);
+            if (OSPrioHighRdy != OSPrioCur) {              /* No Ctx Sw if current task is highest rdy */  
+                lab1_output[lab1_pos][0] = OSTime;
+                lab1_output[lab1_pos][1] = PREEMPT;
+                lab1_output[lab1_pos][2] = (INT32U)OSPrioCur;
+                lab1_output[lab1_pos][3] = OSPrioHighRdy;
+                lab1_pos = (lab1_pos + 1)% OUTPUT_ROW_N;
+                
+                OSTCBHighRdy  = OSTCBPrioTbl[OSPrioHighRdy];
+                OSCtxSwCtr++;                              /* Keep track of the number of ctx switches */
+                OSIntCtxSw();                              /* Perform interrupt level ctx switch       */
+            }
+        }
+        OS_EXIT_CRITICAL();
+    }
+}
+/*$PAGE*/
+/*
+*********************************************************************************************************
 *                                              SCHEDULER
 *
 * Description: This function is called by other uC/OS-II services to determine whether a new, high
@@ -911,28 +895,12 @@ void  OS_Sched (void)
         y             = OSUnMapTbl[OSRdyGrp];          /* Get pointer to HPT ready to run              */
         OSPrioHighRdy = (INT8U)((y << 3) + OSUnMapTbl[OSRdyTbl[y]]);
         if (OSPrioHighRdy != OSPrioCur) {              /* No Ctx Sw if current task is highest rdy     */
-            if(OSPrioHighRdy != 1 && OSPrioCur != 1){
-                //sprintf(lab1_output+strlen(lab1_output),"%8ld    complete %5d  %5d\n", (INT32U)OSTime,OSPrioCur, OSPrioHighRdy);
-                lab1_output[lab1_pos][0] = OSTimeGet();
-                lab1_output[lab1_pos][1] = COMPLETE;
-                lab1_output[lab1_pos][2] = (INT32U)OSPrioCur;
-                lab1_output[lab1_pos][3] = OSPrioHighRdy;
-                lab1_pos = (lab1_pos + 1)% OUTPUT_ROW_N;
-            }
-            else if(OSPrioHighRdy == 1){
-                prev_print_prio = OSPrioCur;
-            }
-            else if(OSPrioCur == 1){
-                if(prev_print_prio != OSPrioHighRdy){
-                    //sprintf(lab1_output+strlen(lab1_output),"%8ld    complete %5d  %5d\n", (INT32U)OSTime,prev_print_prio, OSPrioHighRdy);
-                    lab1_output[lab1_pos][0] = OSTimeGet();
-                    lab1_output[lab1_pos][1] = COMPLETE;
-                    lab1_output[lab1_pos][2] = (INT32U)prev_print_prio;
-                    lab1_output[lab1_pos][3] = OSPrioHighRdy;
-                    lab1_pos = (lab1_pos + 1)% OUTPUT_ROW_N;
-                }
-                prev_print_prio = -1;
-            }
+            lab1_output[lab1_pos][0] = OSTime;
+            lab1_output[lab1_pos][1] = COMPLETE;
+            lab1_output[lab1_pos][2] = (INT32U)OSPrioCur;
+            lab1_output[lab1_pos][3] = OSPrioHighRdy;
+            lab1_pos = (lab1_pos + 1)% OUTPUT_ROW_N;
+            
             OSTCBHighRdy = OSTCBPrioTbl[OSPrioHighRdy];
             OSCtxSwCtr++;                              /* Increment context switch counter             */
             OS_TASK_SW();                              /* Perform a context switch                     */
@@ -1007,6 +975,7 @@ void  OS_TaskIdle (void *pdata)
 #if OS_TASK_STAT_EN > 0
 void  OS_TaskStat (void *pdata)
 {
+    
 #if OS_CRITICAL_METHOD == 3                      /* Allocate storage for CPU status register           */
     OS_CPU_SR  cpu_sr;
 #endif    
@@ -1014,7 +983,7 @@ void  OS_TaskStat (void *pdata)
     INT32U     max;
     INT8S      usage;
 
-
+    OSTimeDly(99999);
     pdata = pdata;                               /* Prevent compiler warning for not using 'pdata'     */
     while (OSStatRdy == FALSE) {
         OSTimeDly(2 * OS_TICKS_PER_SEC);         /* Wait until statistic task is ready                 */

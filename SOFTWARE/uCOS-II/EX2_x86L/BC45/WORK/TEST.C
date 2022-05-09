@@ -58,7 +58,7 @@ OS_STK        TaskClkStk[TASK_STK_SIZE];              /* Clock      task stack  
 OS_STK        Task1Stk[TASK_STK_SIZE];                /* Task #1    task stack                         */
 OS_STK        Task2Stk[TASK_STK_SIZE];                /* Task #2    task stack                         */
 OS_STK        Task3Stk[TASK_STK_SIZE];                /* Task #3    task stack                         */
-INT8U         TASK_INFO[TASK_NUM][2] = {{1,3},{3,6},{4,9}};
+INT8U         TASK_INFO[TASK_NUM][2] = {{1,4},{1,6},{1,8}};
 INT8U         TASK_PRIO[TASK_NUM] = {2, 3, 4};
 INT32U        TASK_CNT[TASK_NUM] = {0, 0, 0};
 
