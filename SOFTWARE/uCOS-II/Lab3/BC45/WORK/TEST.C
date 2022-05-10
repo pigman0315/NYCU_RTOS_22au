@@ -21,9 +21,9 @@
 #define          TASK_STK_SIZE     512                /* Size of each task's stacks (# of WORDs)       */
 
 #define          TASK_START_ID       0 
-#define          TASK_1_ID           1
-#define          TASK_2_ID           2
-#define          TASK_3_ID           3
+#define          TASK_1_ID           3
+#define          TASK_2_ID           4
+#define          TASK_3_ID           5
 
 
 #define          TASK_START_PRIO    0
@@ -43,10 +43,14 @@ OS_STK        Task3Stk[TASK_STK_SIZE];                /* Task #3    task stack  
 
 
 #define          TASK_NUM            3           
-INT8U         TASK_INFO[TASK_NUM][2] = {{1,3},{1,6},{1,12}};
-INT8U         TASK_PRIO[TASK_NUM] = {1, 2, 3};
+INT8U         TASK_INFO[TASK_NUM][2] = {{6,30},{6,30},{9,30}};
+INT8U         TASK_PRIO[TASK_NUM] = {3, 4, 5};
 INT32U        TASK_CNT[TASK_NUM] = {0, 0, 0};
 
+OS_EVENT      *r1, *r2;
+INT8U         err1, err2;
+INT32U        LAB3_MODE_PEND = 2;
+INT32U        LAB3_MODE_POST = 3;
 
 // #define          TASK_NUM            2          
 // INT8U         TASK_INFO[TASK_NUM][2] = {{1,3},{3,6}};
@@ -68,18 +72,39 @@ static  void  TaskStartCreateTasks(void);
 
 void print_buffer(void)
 {
+    
     INT16U i;
+    OS_ENTER_CRITICAL();
     for(i = 0;i < lab1_pos;i++){
         if(lab1_output[i][1] == COMPLETE){
-            printf("%8ld    complete   %5ld    %5ld\n",lab1_output[i][0],lab1_output[i][2],lab1_output[i][3]);
+            printf("%8ld    complete               %ld            %ld\n",lab1_output[i][0],lab1_output[i][2],lab1_output[i][3]);
         }
-        else{
-            printf("%8ld    preempt    %5ld    %5ld\n",lab1_output[i][0],lab1_output[i][2],lab1_output[i][3]);
+        else if(lab1_output[i][1] == PREEMPT){
+            if(lab1_output[i][2] != (INT32U)1 && lab1_output[i][3] != (INT32U)1 &&
+            lab1_output[i][2] != (INT32U)2 && lab1_output[i][3] != (INT32U)2){
+                printf("%8ld    preempt                %ld            %ld\n",lab1_output[i][0],lab1_output[i][2],lab1_output[i][3]);
+            }
         }
+        else if(lab1_output[i][1] == LAB3_MODE_PEND){
+            printf("%8ld    lock      R%ld   (Prio=%ld changes to=%ld)\n",lab1_output[i][0],lab1_output[i][4],lab1_output[i][2],lab1_output[i][3]);
+        }
+        else if(lab1_output[i][1] == LAB3_MODE_POST){
+            printf("%8ld    unlock    R%ld   (Prio=%ld changes to=%ld)\n",lab1_output[i][0],lab1_output[i][4],lab1_output[i][2],lab1_output[i][3]);
+        }
+        else{}
     }
     lab1_pos = 0;
+    OS_EXIT_CRITICAL();
 }
 
+void log_buffer(INT32U mode, INT32U prev_prio, INT32U cur_prio, INT32U resource){
+    lab1_output[lab1_pos][0] = OSTimeGet();
+    lab1_output[lab1_pos][1] = (INT32U)mode;
+    lab1_output[lab1_pos][2] = (INT32U)prev_prio;
+    lab1_output[lab1_pos][3] = (INT32U)cur_prio;
+    lab1_output[lab1_pos][4] = (INT32U)resource;
+    lab1_pos = (lab1_pos + 1)% OUTPUT_ROW_N;
+}
 /*
 *********************************************************************************************************
 *                                                  MAIN
@@ -117,6 +142,9 @@ void main (void)
                    OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR,
                    1,
                    99998);
+    
+    r1 = OSMutexCreate(1, &err1);                           /* Lab3: resource r1 */
+    r2 = OSMutexCreate(2, &err2);                           /* Lab3: resource r2 */
 
     OSStart();                                             /* Start multitasking                       */
 }
@@ -189,18 +217,59 @@ void  Task1 (void *pdata)
     int end;
     int toDelay;
     INT16S  key;
-    start = 1;//OSTimeGet();
+
+    int r1_used, r2_used;
+    INT8U prev_prio, cur_prio;
+    INT32U mode, resource;
     pdata = pdata;
     
     while(1){
+        OSTimeDly(8); // Lab3: simulate start time
+        start = OSTimeGet(); 
+        r1_used = 0;
+        r2_used = 0;
         while(OSTCBCur->compTime > 0){
             if (PC_GetKey(&key)) {                             /* See if key has been pressed              */
                 if (key == 0x1B) {                             /* Yes, see if it's the ESCAPE key          */
                     PC_DOSReturn();                            /* Yes, return to DOS                       */
                 }
             }
+            print_buffer();
+
+            if(OSTCBCur->compTime == 4){                        /* Lab3: Lock R1 */
+                if(!r1_used){
+                    prev_prio = OSTCBCur->OSTCBPrio;
+                    OSMutexPend(r1, 5, &err1);
+                    OS_ENTER_CRITICAL();
+                    log_buffer(LAB3_MODE_PEND,prev_prio,OSTCBCur->OSTCBPrio,(INT32U)1);
+                    r1_used = 1;
+                    OS_EXIT_CRITICAL();
+                }
+                
+            }
+            else if(OSTCBCur->compTime == 2){                   /* Lab3: Lock R2 */
+                if(!r2_used){
+                    prev_prio = OSTCBCur->OSTCBPrio;
+                    OSMutexPend(r2, 5, &err2);
+                    OS_ENTER_CRITICAL();
+                    log_buffer(LAB3_MODE_PEND,prev_prio,OSTCBCur->OSTCBPrio,(INT32U)2);
+                    r2_used = 1;
+                    OS_EXIT_CRITICAL();
+                }
+            }
         }
-        print_buffer();
+        prev_prio = OSTCBCur->OSTCBPrio;
+        OSMutexPost(r1);                                        /* Lab3: Release R1 */
+        OS_ENTER_CRITICAL();
+        log_buffer(LAB3_MODE_POST,prev_prio,OSTCBCur->OSTCBPrio,(INT32U)1);
+        OS_EXIT_CRITICAL();
+        
+        prev_prio = OSTCBCur->OSTCBPrio;
+        OSMutexPost(r2);                                        /* Lab3: Release R2 */
+        OS_ENTER_CRITICAL();
+        log_buffer(LAB3_MODE_POST,prev_prio,OSTCBCur->OSTCBPrio,(INT32U)2);
+        OS_EXIT_CRITICAL();
+        
         end = OSTimeGet();
         toDelay = (int)(OSTCBCur->period) - (end-start);
         start = start + (OSTCBCur->period);
@@ -219,17 +288,42 @@ void  Task2 (void *pdata)
     int end;
     int toDelay;
     INT16S  key;
-    start = 1;//OSTimeGet();
+
+    int r2_used;
+    INT8U prev_prio, cur_prio;
+    INT32U mode, resource;
     pdata = pdata;
+    
     while(1){
+        OSTimeDly(4); // Lab3: simulate start time
+        start = OSTimeGet(); 
+        r2_used = 0;
         while(OSTCBCur->compTime > 0){
             if (PC_GetKey(&key)) {                             /* See if key has been pressed              */
                 if (key == 0x1B) {                             /* Yes, see if it's the ESCAPE key          */
                     PC_DOSReturn();                            /* Yes, return to DOS                       */
                 }
             }
+            print_buffer();
+
+            if(OSTCBCur->compTime == 4){                        /* Lab3: Lock R2 */
+                if(!r2_used){
+                    prev_prio = OSTCBCur->OSTCBPrio;
+                    OSMutexPend(r2, 5, &err2);
+                    OS_ENTER_CRITICAL();
+                    log_buffer(LAB3_MODE_PEND,prev_prio,OSTCBCur->OSTCBPrio,(INT32U)2);
+                    r2_used = 1;
+                    OS_EXIT_CRITICAL();
+                }
+                
+            }
         }
-        print_buffer();
+        prev_prio = OSTCBCur->OSTCBPrio;
+        OSMutexPost(r2);                                        /* Lab3: Release R2 */
+        OS_ENTER_CRITICAL();
+        log_buffer(LAB3_MODE_POST,prev_prio,OSTCBCur->OSTCBPrio,(INT32U)2);
+        OS_EXIT_CRITICAL();
+        
         end = OSTimeGet();
         toDelay = (int)(OSTCBCur->period) - (end-start);
         start = start + (OSTCBCur->period);
@@ -247,17 +341,44 @@ void  Task3 (void *pdata)
     int end;
     int toDelay;
     INT16S  key;
-    start = 1;//OSTimeGet();
+
+    int r1_used;
+    INT8U prev_prio, cur_prio;
+    INT32U mode, resource;
     pdata = pdata;
+    
+    // initialize output
+    lab1_pos = 0;
+    OSTimeSet(0);
     while(1){
+        start = OSTimeGet(); 
+        r1_used = 0;
         while(OSTCBCur->compTime > 0){
             if (PC_GetKey(&key)) {                             /* See if key has been pressed              */
                 if (key == 0x1B) {                             /* Yes, see if it's the ESCAPE key          */
                     PC_DOSReturn();                            /* Yes, return to DOS                       */
                 }
             }
+            print_buffer();
+
+            if(OSTCBCur->compTime == 7){                        /* Lab3: Lock R2 */
+                if(!r1_used){
+                    prev_prio = OSTCBCur->OSTCBPrio;
+                    OSMutexPend(r1, 5, &err1);
+                    OS_ENTER_CRITICAL();
+                    log_buffer(LAB3_MODE_PEND,prev_prio,OSTCBCur->OSTCBPrio,(INT32U)1);
+                    r1_used = 1;
+                    OS_EXIT_CRITICAL();
+                }
+                
+            }
         }
-        print_buffer();
+        prev_prio = OSTCBCur->OSTCBPrio;
+        OSMutexPost(r1);                                        /* Lab3: Release R1 */
+        OS_ENTER_CRITICAL();
+        log_buffer(LAB3_MODE_POST,prev_prio,OSTCBCur->OSTCBPrio,(INT32U)1);
+        OS_EXIT_CRITICAL();
+        
         end = OSTimeGet();
         toDelay = (int)(OSTCBCur->period) - (end-start);
         start = start + (OSTCBCur->period);

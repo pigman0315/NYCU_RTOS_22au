@@ -850,7 +850,7 @@ void  OSIntExit (void)
             OSIntExitY    = OSUnMapTbl[OSRdyGrp];          /* ... and not locked.                      */
             OSPrioHighRdy = (INT8U)((OSIntExitY << 3) + OSUnMapTbl[OSRdyTbl[OSIntExitY]]);
             if (OSPrioHighRdy != OSPrioCur) {              /* No Ctx Sw if current task is highest rdy */  
-                lab1_output[lab1_pos][0] = OSTime;
+                lab1_output[lab1_pos][0] = OSTimeGet();
                 lab1_output[lab1_pos][1] = PREEMPT;
                 lab1_output[lab1_pos][2] = (INT32U)OSPrioCur;
                 lab1_output[lab1_pos][3] = OSPrioHighRdy;
@@ -895,9 +895,9 @@ void  OS_Sched (void)
         y             = OSUnMapTbl[OSRdyGrp];          /* Get pointer to HPT ready to run              */
         OSPrioHighRdy = (INT8U)((y << 3) + OSUnMapTbl[OSRdyTbl[y]]);
         if (OSPrioHighRdy != OSPrioCur) {              /* No Ctx Sw if current task is highest rdy     */
-            lab1_output[lab1_pos][0] = OSTime;
+            lab1_output[lab1_pos][0] = OSTimeGet();
             lab1_output[lab1_pos][1] = COMPLETE;
-            lab1_output[lab1_pos][2] = (INT32U)OSPrioCur;
+            lab1_output[lab1_pos][2] = (INT32U)OSTCBCur->OSTCBId;
             lab1_output[lab1_pos][3] = OSPrioHighRdy;
             lab1_pos = (lab1_pos + 1)% OUTPUT_ROW_N;
             
