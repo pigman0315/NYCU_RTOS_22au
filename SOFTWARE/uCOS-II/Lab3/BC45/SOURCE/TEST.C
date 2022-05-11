@@ -259,15 +259,15 @@ void  Task1 (void *pdata)
             }
         }
         prev_prio = OSTCBCur->OSTCBPrio;
-        OSMutexPost(r1);                                        /* Lab3: Release R1 */
-        OS_ENTER_CRITICAL();
-        log_buffer(LAB3_MODE_POST,prev_prio,OSTCBCur->OSTCBPrio,(INT32U)1);
-        OS_EXIT_CRITICAL();
-        
-        prev_prio = OSTCBCur->OSTCBPrio;
         OSMutexPost(r2);                                        /* Lab3: Release R2 */
         OS_ENTER_CRITICAL();
         log_buffer(LAB3_MODE_POST,prev_prio,OSTCBCur->OSTCBPrio,(INT32U)2);
+        OS_EXIT_CRITICAL();
+
+        prev_prio = OSTCBCur->OSTCBPrio;
+        OSMutexPost(r1);                                        /* Lab3: Release R1 */
+        OS_ENTER_CRITICAL();
+        log_buffer(LAB3_MODE_POST,prev_prio,OSTCBCur->OSTCBPrio,(INT32U)1);
         OS_EXIT_CRITICAL();
         
         end = OSTimeGet();

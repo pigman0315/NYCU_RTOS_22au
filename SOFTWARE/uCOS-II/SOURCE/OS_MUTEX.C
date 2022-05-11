@@ -340,25 +340,38 @@ void  OSMutexPend (OS_EVENT *pevent, INT16U timeout, INT8U *err)
             rdy = FALSE;                                          
         }
 
-
         pevent->OSEventCnt &= OS_MUTEX_KEEP_UPPER_8;       /* Yes, Acquire the resource                */
         pevent->OSEventCnt |= OSTCBCur->OSTCBPrio;         /*      Save priority of owning task        */
         pevent->OSEventPtr  = (void *)OSTCBCur;            /*      Point to owning task's OS_TCB       */
 
+        
+        // Lab3: Below code is CPP implementation (elevate priority on locking resource)
         pip                     = (INT8U)(pevent->OSEventCnt >> 8); // get mutex prio
-        OSTCBCur->OSTCBPrio     = pip;
-
-        // 
-        OSTCBCur->OSTCBY        = OSTCBCur->OSTCBPrio >> 3; // prio lookup table
-        OSTCBCur->OSTCBBitY     = OSMapTbl[OSTCBCur->OSTCBY];
-
-        OSTCBCur->OSTCBX        = OSTCBCur->OSTCBPrio & 0x07;
-        OSTCBCur->OSTCBBitX     = OSMapTbl[OSTCBCur->OSTCBX];
-        if (rdy == TRUE) {                                 /* If task was ready at owner's priority ...*/
-            OSRdyGrp               |= OSTCBCur->OSTCBBitY;     /* ... make it ready at new priority.       */
-            OSRdyTbl[OSTCBCur->OSTCBY] |= OSTCBCur->OSTCBBitX;
+        // Lab3: To solve the problem locking low priority resouce will reduce current priority
+        if(OSTCBCur->OSTCBPrio >= pip){
+            OSTCBCur->OSTCBPrio     = pip;
+            OSTCBCur->OSTCBY        = OSTCBCur->OSTCBPrio >> 3; // prio lookup table
+            OSTCBCur->OSTCBBitY     = OSMapTbl[OSTCBCur->OSTCBY];
+            OSTCBCur->OSTCBX        = OSTCBCur->OSTCBPrio & 0x07;
+            OSTCBCur->OSTCBBitX     = OSMapTbl[OSTCBCur->OSTCBX];
+            if (rdy == TRUE) {                                 /* If task was ready at owner's priority ...*/
+                OSRdyGrp               |= OSTCBCur->OSTCBBitY;     /* ... make it ready at new priority.       */
+                OSRdyTbl[OSTCBCur->OSTCBY] |= OSTCBCur->OSTCBBitX;
+            }
+            OSTCBPrioTbl[pip]       = (OS_TCB *)OSTCBCur;   
         }
-        OSTCBPrioTbl[pip]       = (OS_TCB *)OSTCBCur;        
+        // Lab3: althogh priority doesn't change, we still need to make it ready again after locking resource
+        else{
+            OSTCBCur->OSTCBY        = OSTCBCur->OSTCBPrio >> 3; // prio lookup table
+            OSTCBCur->OSTCBBitY     = OSMapTbl[OSTCBCur->OSTCBY];
+            OSTCBCur->OSTCBX        = OSTCBCur->OSTCBPrio & 0x07;
+            OSTCBCur->OSTCBBitX     = OSMapTbl[OSTCBCur->OSTCBX];
+            if (rdy == TRUE) {                                 /* If task was ready at owner's priority ...*/
+                OSRdyGrp               |= OSTCBCur->OSTCBBitY;     /* ... make it ready at new priority.       */
+                OSRdyTbl[OSTCBCur->OSTCBY] |= OSTCBCur->OSTCBBitX;
+            }
+            OSTCBPrioTbl[OSTCBCur->OSTCBPrio]       = (OS_TCB *)OSTCBCur; 
+        }
         OS_EXIT_CRITICAL();
         *err  = OS_NO_ERR;
         return;
