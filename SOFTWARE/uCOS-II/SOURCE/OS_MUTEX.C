@@ -345,7 +345,7 @@ void  OSMutexPend (OS_EVENT *pevent, INT16U timeout, INT8U *err)
         pevent->OSEventPtr  = (void *)OSTCBCur;            /*      Point to owning task's OS_TCB       */
 
         
-        // Lab3: Below code is CPP implementation (elevate priority on locking resource)
+        // Lab3: Below code is CPP implementation (boost priority on locking resource)
         pip                     = (INT8U)(pevent->OSEventCnt >> 8); // get mutex prio
         // Lab3: To solve the problem locking low priority resouce will reduce current priority
         if(OSTCBCur->OSTCBPrio >= pip){
